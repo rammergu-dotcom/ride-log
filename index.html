@@ -291,6 +291,12 @@
     padding: 16px 20px 8px 20px;
     flex-shrink: 0;
   }
+  .log-header-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
   .log-title {
     font-size: 20px;
     font-weight: 600;
@@ -300,6 +306,24 @@
     font-size: 12px;
     color: rgba(245, 242, 235, 0.5);
     letter-spacing: 0.5px;
+  }
+  .log-import-btn {
+    font-family: inherit;
+    background: transparent;
+    border: 1px solid rgba(245, 242, 235, 0.2);
+    color: rgba(245, 242, 235, 0.7);
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .log-import-btn:active {
+    background: rgba(245, 242, 235, 0.08);
   }
   .log-totals {
     display: flex;
@@ -635,8 +659,14 @@
   <!-- LOG SCREEN -->
   <div id="logScreen" class="screen">
     <div class="log-header">
-      <div class="log-title">Ride Log <span id="logCount" style="color:rgba(245,242,235,0.5);font-weight:400;font-size:14px;"></span></div>
-      <div class="log-subtitle" id="logSubtitle"></div>
+      <div class="log-header-row">
+        <div>
+          <div class="log-title">Ride Log <span id="logCount" style="color:rgba(245,242,235,0.5);font-weight:400;font-size:14px;"></span></div>
+          <div class="log-subtitle" id="logSubtitle"></div>
+        </div>
+        <button class="log-import-btn" id="importBtn">Import</button>
+      </div>
+      <input type="file" id="csvFileInput" accept=".csv,text/csv,text/plain" style="display:none;">
     </div>
     <div class="log-totals">
       <div class="log-total-card">
@@ -789,6 +819,8 @@
   const logTotalDist = $('logTotalDist');
   const logTotalTime = $('logTotalTime');
   const logTotalRides = $('logTotalRides');
+  const importBtn = $('importBtn');
+  const csvFileInput = $('csvFileInput');
 
   // ---------- STORAGE ----------
   function loadRides() {
@@ -1212,6 +1244,139 @@
     document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
+
+  // ---------- CSV IMPORT ----------
+  // RFC 4180-ish CSV parser. Handles quoted fields with embedded commas,
+  // newlines, and doubled-quote escapes ("").
+  function parseCsv(text) {
+    // Strip BOM if present
+    if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+    const rows = [];
+    let row = [];
+    let field = '';
+    let inQuotes = false;
+    const n = text.length;
+    let i = 0;
+    const flushRow = () => {
+      // Skip purely empty rows
+      if (!(row.length === 1 && row[0] === '')) rows.push(row);
+      row = [];
+    };
+    while (i < n) {
+      const c = text[i];
+      if (inQuotes) {
+        if (c === '"') {
+          if (text[i + 1] === '"') { field += '"'; i += 2; continue; }
+          inQuotes = false; i++; continue;
+        }
+        field += c; i++; continue;
+      }
+      if (c === '"') { inQuotes = true; i++; continue; }
+      if (c === ',') { row.push(field); field = ''; i++; continue; }
+      if (c === '\r' || c === '\n') {
+        row.push(field); field = '';
+        if (c === '\r' && text[i + 1] === '\n') i++;
+        flushRow();
+        i++; continue;
+      }
+      field += c; i++;
+    }
+    // Final field/row
+    if (field !== '' || row.length > 0) { row.push(field); flushRow(); }
+    return rows;
+  }
+
+  // Parse "YYYY-MM-DD HH:MM" (export format) to ms timestamp (local time)
+  function parseCsvDateTime(s) {
+    const m = String(s).trim().match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?$/);
+    if (!m) return NaN;
+    return new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +(m[6] || 0), 0).getTime();
+  }
+
+  // Import a CSV text. Merge-only: skips rides whose startTime already exists.
+  // Returns { added, skipped, invalid, error }.
+  function importCsvText(text) {
+    const rows = parseCsv(text);
+    if (rows.length < 1) {
+      return { added: 0, skipped: 0, invalid: 0, error: 'Empty file' };
+    }
+    // Detect and skip header row
+    let dataStart = 0;
+    const first = rows[0].map(s => s.trim().toLowerCase());
+    if (first[0] === 'start' && (first[1] === 'end' || first[1] === 'end time')) {
+      dataStart = 1;
+    }
+
+    const existing = new Set(rides.map(r => r.startTime));
+    const toAdd = [];
+    let added = 0, skipped = 0, invalid = 0;
+
+    for (let r = dataStart; r < rows.length; r++) {
+      const cols = rows[r];
+      if (cols.length < 4) { invalid++; continue; }
+      const startTs = parseCsvDateTime(cols[0]);
+      const endTs = parseCsvDateTime(cols[1]);
+      const odoStart = parseFloat(cols[2]);
+      const odoEnd = parseFloat(cols[3]);
+      const timeMin = cols.length > 4 ? parseFloat(cols[4]) : NaN;
+      const distKm = cols.length > 5 ? parseFloat(cols[5]) : NaN;
+      const notes = cols.length > 6 ? (cols[6] || '') : '';
+
+      if (!isFinite(startTs) || !isFinite(endTs) || !isFinite(odoStart) || !isFinite(odoEnd)) {
+        invalid++; continue;
+      }
+      if (existing.has(startTs)) { skipped++; continue; }
+
+      toAdd.push({
+        id: 'imp_' + startTs + '_' + Math.random().toString(36).slice(2, 7),
+        startTime: startTs,
+        endTime: endTs,
+        odoStart: odoStart,
+        odoEnd: odoEnd,
+        notes: notes,
+        timeMinutes: isFinite(timeMin) ? timeMin : (endTs - startTs) / 60000,
+        distanceKm: isFinite(distKm) ? distKm : (odoEnd - odoStart)
+      });
+      existing.add(startTs);
+      added++;
+    }
+
+    if (added > 0) {
+      rides.push(...toAdd);
+      rides.sort((a, b) => b.startTime - a.startTime); // newest-first
+      saveRides();
+      // After a successful import, ensure the seed never re-fires
+      localStorage.setItem(STORAGE_SEEDED, '1');
+    }
+    return { added, skipped, invalid };
+  }
+
+  importBtn.addEventListener('click', () => csvFileInput.click());
+  csvFileInput.addEventListener('change', async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const res = importCsvText(text);
+      if (res.error) {
+        showToast(res.error);
+      } else if (res.added === 0 && res.skipped === 0 && res.invalid === 0) {
+        showToast('No rides found in file');
+      } else {
+        render();
+        const parts = [];
+        if (res.added) parts.push(`${res.added} imported`);
+        if (res.skipped) parts.push(`${res.skipped} already existed`);
+        if (res.invalid) parts.push(`${res.invalid} invalid`);
+        showToast(parts.join(' · '));
+      }
+    } catch (err) {
+      showToast('Could not read file');
+    } finally {
+      // Reset so the same file can be picked again
+      csvFileInput.value = '';
+    }
+  });
 
   // ---------- TABS ----------
   document.querySelectorAll('.tab-btn').forEach(btn => {
