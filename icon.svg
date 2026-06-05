@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
+  <rect width="180" height="180" fill="#4A5240"/>
+  <text x="90" y="78"
+        font-family="Helvetica Neue, Helvetica, Arial, sans-serif"
+        font-size="84"
+        font-weight="800"
+        letter-spacing="-2"
+        fill="#F5F2EB"
+        text-anchor="middle"
+        dominant-baseline="central">RE</text>
+  <text x="90" y="138"
+        font-family="Helvetica Neue, Helvetica, Arial, sans-serif"
+        font-size="32"
+        font-weight="600"
+        letter-spacing="6"
+        fill="#F5F2EB"
+        text-anchor="middle"
+        dominant-baseline="central">LOG</text>
+</svg>
