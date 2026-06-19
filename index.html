@@ -11,6 +11,22 @@
 <link rel="icon" type="image/png" href="apple-touch-icon.png">
 <title>Ride Log</title>
 <style>
+  :root {
+    --bg: #2A2820;
+    --bg-2: #1F1D17;
+    --olive: #4A5240;
+    --surface: #3C4035;
+    --surface-light: #4F5443;
+    --surface-card: rgba(74, 82, 64, 0.35);
+    --cream: #F5F2EB;
+    --cream-muted: rgba(245, 242, 235, 0.55);
+    --cream-dim: rgba(245, 242, 235, 0.35);
+    --cream-faint: rgba(245, 242, 235, 0.15);
+    --amber: #BA7517;
+    --amber-bright: #D89A2E;
+    --gold: #d4a35d;
+    --danger: #F09595;
+  }
   * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
@@ -456,6 +472,415 @@
     line-height: 1;
   }
 
+  /* QUICK LOG FAB (floats above the tab bar centre) */
+  .fab-wrap {
+    position: relative;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    background: var(--bg-2);
+    padding-top: 18px;
+    padding-bottom: env(safe-area-inset-bottom);
+    border-top: 1px solid rgba(245, 242, 235, 0.08);
+  }
+  .fab-wrap .tab-btn {
+    /* override the global safe-area split since the wrap owns it */
+    padding: 6px 8px 8px 8px;
+  }
+  .fab-wrap .tab-bar {
+    padding-top: 4px;
+  }
+  .fab-label {
+    font-size: 10px;
+    color: var(--cream-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: 6px;
+  }
+  .fab {
+    position: absolute;
+    top: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--surface-light);
+    border: 2px solid var(--bg-2);
+    color: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+    z-index: 5;
+  }
+  .fab:active {
+    background: #5C6253;
+  }
+
+  /* HOME — JOURNEY & LOGBOOK CARD (arc gauge) */
+  .gauge-card {
+    margin: 14px 16px 12px 16px;
+    padding: 14px 14px 16px 14px;
+    background: var(--surface-card);
+    border-radius: 14px;
+    border: 1px solid rgba(245, 242, 235, 0.06);
+    flex-shrink: 0;
+  }
+  .gauge-card-header {
+    font-size: 11px;
+    color: var(--cream);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(245, 242, 235, 0.08);
+    margin-bottom: 6px;
+  }
+  .gauge-grid {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    column-gap: 8px;
+  }
+  .gauge-side {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    min-width: 70px;
+  }
+  .gauge-side.left { align-items: flex-start; text-align: left; }
+  .gauge-side.right { align-items: flex-end; text-align: right; }
+  .gauge-side-value {
+    font-size: 22px;
+    font-weight: 200;
+    color: var(--cream);
+    line-height: 1;
+  }
+  .gauge-side-unit {
+    font-size: 12px;
+    color: var(--cream-dim);
+    margin-left: 2px;
+  }
+  .gauge-side-sub {
+    font-size: 11px;
+    color: var(--cream-dim);
+    margin-top: 4px;
+  }
+  .gauge-svg-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2 / 1.2;
+  }
+  .gauge-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .gauge-centre {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    padding-top: 6px;
+  }
+  .gauge-centre-label {
+    font-size: 10px;
+    color: var(--cream-muted);
+    letter-spacing: 0.06em;
+  }
+  .gauge-centre-time {
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--cream);
+    line-height: 1.05;
+    margin-top: 2px;
+  }
+  .gauge-centre-target {
+    font-size: 11px;
+    color: var(--cream-dim);
+    margin-top: 1px;
+  }
+  .gauge-centre-night {
+    margin-top: 8px;
+    text-align: center;
+  }
+  .gauge-centre-night-label {
+    font-size: 10px;
+    color: var(--cream-muted);
+    letter-spacing: 0.04em;
+  }
+  .gauge-centre-night-val {
+    font-size: 12px;
+    color: var(--cream);
+    margin-top: 1px;
+  }
+  .gauge-centre-night-val .pr-target { color: var(--cream-dim); }
+  .gauge-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(245, 242, 235, 0.06);
+  }
+  .gauge-footer-left, .gauge-footer-right {
+    display: flex;
+    flex-direction: column;
+  }
+  .gauge-footer-right { align-items: flex-end; }
+  .gauge-footer-value {
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--cream);
+    line-height: 1;
+  }
+  .gauge-footer-sub {
+    font-size: 10px;
+    color: var(--cream-dim);
+    margin-top: 3px;
+  }
+  .gauge-pct-label {
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .gauge-pct-label.total { fill: var(--cream); }
+  .gauge-pct-label.night { fill: var(--amber-bright); }
+
+  /* LOG — TIMELINE & JOURNEY CARDS */
+  .timeline-wrap {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 14px 16px 16px 16px;
+    position: relative;
+  }
+  .timeline-month {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 4px 0 12px 0;
+    position: relative;
+  }
+  .timeline-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--cream-muted);
+    flex-shrink: 0;
+    margin-left: 4px;
+  }
+  .timeline-month-label {
+    font-size: 14px;
+    color: var(--cream);
+    font-weight: 500;
+  }
+  .timeline-rail {
+    position: absolute;
+    left: 24px;
+    top: 32px;
+    bottom: 16px;
+    width: 1px;
+    background: rgba(245, 242, 235, 0.12);
+    pointer-events: none;
+  }
+  .journey-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .journey-rail-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(245, 242, 235, 0.4);
+    margin-top: 18px;
+    margin-left: 4px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .journey-card {
+    flex: 1;
+    background: var(--surface-card);
+    border: 1px solid rgba(245, 242, 235, 0.06);
+    border-radius: 12px;
+    overflow: hidden;
+    min-width: 0;
+  }
+  .journey-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 14px;
+    cursor: pointer;
+    gap: 10px;
+  }
+  .journey-head-title {
+    font-size: 15px;
+    color: var(--cream);
+    font-weight: 600;
+  }
+  .journey-head-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--cream-muted);
+    font-size: 12px;
+  }
+  .journey-chevron {
+    display: inline-flex;
+    transition: transform 0.2s ease;
+  }
+  .journey-card.expanded .journey-chevron {
+    transform: rotate(180deg);
+  }
+  .journey-body {
+    display: none;
+    padding: 0 14px 14px 14px;
+  }
+  .journey-card.expanded .journey-body {
+    display: block;
+  }
+  .journey-meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding-bottom: 12px;
+  }
+  .journey-meta-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .daynight-icons {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .daynight-icons .sun { color: var(--amber-bright); }
+  .daynight-icons .moon { color: var(--cream); }
+  .journey-time-range {
+    font-size: 14px;
+    color: var(--cream);
+    font-weight: 500;
+  }
+  .journey-distance {
+    font-size: 14px;
+    color: var(--cream);
+    font-weight: 500;
+  }
+  .map-canvas {
+    display: block;
+    width: 100%;
+    height: 160px;
+    background:
+      radial-gradient(circle at 30% 30%, rgba(245,242,235,0.04), transparent 50%),
+      radial-gradient(circle at 70% 70%, rgba(245,242,235,0.03), transparent 50%),
+      #36392F;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(245,242,235,0.025) 0 1px, transparent 1px 24px),
+      repeating-linear-gradient(90deg, rgba(245,242,235,0.025) 0 1px, transparent 1px 24px);
+    background-color: #36392F;
+    border-radius: 10px;
+    border: 1px solid rgba(245, 242, 235, 0.06);
+    margin-bottom: 12px;
+  }
+  .gpx-attach {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface-light);
+    color: var(--cream);
+    padding: 8px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    margin-bottom: 10px;
+  }
+  .gpx-attach:active { background: #5C6253; }
+  .log-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .detail-item {
+    background: rgba(245, 242, 235, 0.04);
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--cream-dim);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .detail-item strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--cream);
+    letter-spacing: 0;
+    text-transform: none;
+    margin-top: 2px;
+  }
+  .notes-field {
+    width: 100%;
+    background: rgba(245, 242, 235, 0.04);
+    border: 1px solid rgba(245, 242, 235, 0.08);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--cream);
+    font-family: inherit;
+    font-size: 13px;
+    min-height: 56px;
+    resize: vertical;
+  }
+  .notes-field::placeholder { color: var(--cream-dim); }
+  .notes-field:focus { outline: none; border-color: rgba(245,242,235,0.2); }
+  .journey-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+  }
+  .journey-options-btn {
+    background: transparent;
+    border: none;
+    color: var(--cream-dim);
+    padding: 6px 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .journey-options-btn:active { color: var(--cream); }
+  .log-empty-timeline {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--cream-dim);
+    font-size: 13px;
+  }
+
   /* LOG TAB */
   .log-header {
     padding: 16px 20px 8px 20px;
@@ -809,49 +1234,59 @@
 
   <!-- HOME SCREEN -->
   <div id="homeScreen" class="screen active">
-    <div class="kpi-strip">
-      <div class="kpi-card">
-        <div class="kpi-label">Total Dist</div>
-        <div class="kpi-value"><span id="kpiDistance">0</span><span class="kpi-unit">km</span></div>
-        <div class="kpi-sub" id="kpiDistanceSub">0 rides</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Total Time</div>
-        <div class="kpi-value" id="kpiTime">0h 0m</div>
-        <div class="kpi-sub" id="kpiTimeSub"></div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Last Odo</div>
-        <div class="kpi-value"><span id="kpiOdo">—</span><span class="kpi-unit" id="kpiOdoUnit"></span></div>
-        <div class="kpi-sub">last reading</div>
-      </div>
-    </div>
-
-    <div class="logbook-progress">
-      <div class="logbook-progress-header">
-        <div class="logbook-progress-label">Logbook Progress</div>
-        <div class="logbook-progress-overall"><span id="progressOverallPct">0</span>% overall</div>
-      </div>
-      <div class="progress-row">
-        <div class="progress-row-labels">
-          <div class="progress-row-left">Total hours</div>
-          <div class="progress-row-right">
-            <span class="pr-hours" id="progressTotalHours">0.0h</span><span class="pr-target"> / 120h</span><span class="pr-pct"> · <span id="progressTotalPct">0</span>%</span>
+    <div class="gauge-card">
+      <div class="gauge-card-header">Journey &amp; Logbook</div>
+      <div class="gauge-grid">
+        <div class="gauge-side left">
+          <div><span class="gauge-side-value" id="gaugeDistVal">0</span><span class="gauge-side-unit">km</span></div>
+          <div class="gauge-side-sub" id="gaugeDistSub">0 rides</div>
+        </div>
+        <div class="gauge-svg-wrap">
+          <svg class="gauge-svg" viewBox="-130 -130 260 150" preserveAspectRatio="xMidYMid meet">
+            <!-- Track: total (outer) -->
+            <circle r="100" cx="0" cy="0" fill="none"
+              stroke="rgba(245,242,235,0.10)" stroke-width="16" stroke-linecap="round"
+              stroke-dasharray="314.159 1000" transform="rotate(180)"/>
+            <!-- Track: night (inner) -->
+            <circle r="75" cx="0" cy="0" fill="none"
+              stroke="rgba(245,242,235,0.08)" stroke-width="12" stroke-linecap="round"
+              stroke-dasharray="235.619 1000" transform="rotate(180)"/>
+            <!-- Fill: total (outer) -->
+            <circle id="arcTotal" r="100" cx="0" cy="0" fill="none"
+              stroke="#A09875" stroke-width="16" stroke-linecap="round"
+              stroke-dasharray="0 1000" transform="rotate(180)"/>
+            <!-- Fill: night (inner) -->
+            <circle id="arcNight" r="75" cx="0" cy="0" fill="none"
+              stroke="#BA7517" stroke-width="12" stroke-linecap="round"
+              stroke-dasharray="0 1000" transform="rotate(180)"/>
+            <!-- Percent labels -->
+            <text id="arcTotalLabel" class="gauge-pct-label total" x="0" y="0" text-anchor="middle">8%</text>
+            <text id="arcNightLabel" class="gauge-pct-label night" x="0" y="0" text-anchor="middle">2%</text>
+          </svg>
+          <div class="gauge-centre">
+            <div class="gauge-centre-label">Total Logbook Time</div>
+            <div class="gauge-centre-time" id="gaugeCentreTime">0h 0m</div>
+            <div class="gauge-centre-target">/ 120h</div>
+            <div class="gauge-centre-night">
+              <div class="gauge-centre-night-label">Night hours</div>
+              <div class="gauge-centre-night-val"><span id="gaugeNightHours">0.0h</span><span class="pr-target"> / 20h</span></div>
+            </div>
           </div>
         </div>
-        <div class="progress-bar"><div class="progress-bar-fill total" id="progressTotalFill" style="width:0%"></div></div>
-      </div>
-      <div class="progress-row">
-        <div class="progress-row-labels">
-          <div class="progress-row-left">
-            <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3h.393a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"/></svg>
-            <span>Night hours</span>
-          </div>
-          <div class="progress-row-right">
-            <span class="pr-hours" id="progressNightHours">0.0h</span><span class="pr-target"> / 20h</span><span class="pr-pct"> · <span id="progressNightPct">0</span>%</span>
-          </div>
+        <div class="gauge-side right">
+          <div><span class="gauge-side-value" id="gaugeOdoVal">—</span><span class="gauge-side-unit" id="gaugeOdoUnit"></span></div>
+          <div class="gauge-side-sub">ODO</div>
         </div>
-        <div class="progress-bar"><div class="progress-bar-fill night" id="progressNightFill" style="width:0%"></div></div>
+      </div>
+      <div class="gauge-footer">
+        <div class="gauge-footer-left">
+          <div class="gauge-footer-value"><span id="gaugeOverallPct">0</span>%</div>
+          <div class="gauge-footer-sub">overall</div>
+        </div>
+        <div class="gauge-footer-right">
+          <div class="gauge-footer-value"><span id="gaugeOdoFooter">—</span><span class="gauge-side-unit"> km</span></div>
+          <div class="gauge-footer-sub">ODO</div>
+        </div>
       </div>
     </div>
 
@@ -871,45 +1306,43 @@
       <div class="kpi-card">
         <div class="kpi-label">Distance</div>
         <div class="kpi-value"><span id="logKpiDistance">0</span><span class="kpi-unit">km</span></div>
-        <div class="kpi-sub" id="logKpiDistanceSub">all time</div>
+        <div class="kpi-sub">all time</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-label">Time</div>
         <div class="kpi-value" id="logKpiTime">0h 0m</div>
-        <div class="kpi-sub" id="logKpiTimeSub">all time</div>
+        <div class="kpi-sub">all time</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-label">Rides</div>
         <div class="kpi-value" id="logKpiRides">0</div>
-        <div class="kpi-sub" id="logKpiRidesSub">total</div>
+        <div class="kpi-sub">total</div>
       </div>
-    </div>
-    <div class="log-month-row">
-      <div class="log-month-label" id="logMonthLabel">—</div>
-      <button class="log-copy-today-btn" id="copyTodayBtn">
-        <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z"/><path d="M4.012 16.737a2 2 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"/></svg>
-        <span>Copy today</span>
-      </button>
     </div>
     <input type="file" id="csvFileInput" accept=".csv,text/csv,text/plain" style="display:none;">
-    <div class="log-table-container">
-      <div class="log-table-scroll" id="logTableScroll">
-        <table class="log-table" id="logTable"></table>
-        <div class="log-empty" id="logEmpty" style="display:none;">No rides logged yet.<br>Tap Start Ride to begin.</div>
-      </div>
+    <div class="timeline-wrap" id="timelineWrap">
+      <div class="timeline-rail" id="timelineRail"></div>
+      <div id="timelineContent"></div>
+      <div class="log-empty-timeline" id="logEmpty" style="display:none;">No rides logged yet.<br>Tap Start Ride or Quick Log to begin.</div>
     </div>
   </div>
 
-  <!-- TAB BAR -->
-  <div class="tab-bar">
-    <button class="tab-btn active" data-tab="home">
-      <span class="tab-icon">●</span>
-      <span>Home</span>
+  <!-- FAB STRIP + TAB BAR -->
+  <div class="fab-wrap">
+    <button class="fab" id="quickLogBtn" aria-label="Quick log">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
     </button>
-    <button class="tab-btn" data-tab="log">
-      <span class="tab-icon">●</span>
-      <span>Log</span>
-    </button>
+    <div class="fab-label">Quick log</div>
+    <div class="tab-bar" style="background:transparent;border-top:none;padding-bottom:0;">
+      <button class="tab-btn active" data-tab="home">
+        <span class="tab-icon">●</span>
+        <span>Home</span>
+      </button>
+      <button class="tab-btn" data-tab="log">
+        <span class="tab-icon">●</span>
+        <span>Log</span>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -1025,6 +1458,52 @@
   </div>
 </div>
 
+<!-- QUICK LOG SHEET -->
+<div class="sheet" id="quickLogSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title">Quick Log</div>
+
+  <div class="field">
+    <div class="field-label">Start</div>
+    <input class="field-input" type="datetime-local" id="quickStart">
+  </div>
+
+  <div class="field">
+    <div class="field-label">End</div>
+    <input class="field-input" type="datetime-local" id="quickEnd">
+  </div>
+
+  <div class="field">
+    <div class="field-label">Odometer Start (km)</div>
+    <input class="field-input" type="number" inputmode="decimal" id="quickOdoStart" step="0.1">
+  </div>
+
+  <div class="field">
+    <div class="field-label">Odometer End (km)</div>
+    <input class="field-input" type="number" inputmode="decimal" id="quickOdoEnd" step="0.1">
+  </div>
+
+  <div class="field">
+    <div class="field-label">Notes</div>
+    <input class="field-input" type="text" id="quickNotes" placeholder="Optional">
+  </div>
+
+  <div class="field">
+    <div class="field-label">Calculated Time</div>
+    <div class="field-value formula" id="quickCalcTime">—</div>
+  </div>
+
+  <div class="field">
+    <div class="field-label">Calculated Distance</div>
+    <div class="field-value formula" id="quickCalcDist">—</div>
+  </div>
+
+  <div class="sheet-buttons">
+    <button class="btn-cancel" id="quickCancel">Cancel</button>
+    <button class="btn-save" id="quickSave">Save Ride</button>
+  </div>
+</div>
+
 <!-- INLINE EDIT OVERLAY -->
 <div class="edit-overlay" id="editOverlay">
   <div class="edit-modal">
@@ -1071,12 +1550,19 @@
   const activeBanner = $('activeBanner');
   const activeTimer = $('activeTimer');
   const activeSubstrip = $('activeSubstrip');
-  const kpiDistance = $('kpiDistance');
-  const kpiDistanceSub = $('kpiDistanceSub');
-  const kpiTime = $('kpiTime');
-  const kpiTimeSub = $('kpiTimeSub');
-  const kpiOdo = $('kpiOdo');
-  const kpiOdoUnit = $('kpiOdoUnit');
+  // Home gauge elements
+  const gaugeDistVal = $('gaugeDistVal');
+  const gaugeDistSub = $('gaugeDistSub');
+  const gaugeOdoVal = $('gaugeOdoVal');
+  const gaugeOdoUnit = $('gaugeOdoUnit');
+  const gaugeOdoFooter = $('gaugeOdoFooter');
+  const gaugeCentreTime = $('gaugeCentreTime');
+  const gaugeNightHours = $('gaugeNightHours');
+  const gaugeOverallPct = $('gaugeOverallPct');
+  const arcTotal = $('arcTotal');
+  const arcNight = $('arcNight');
+  const arcTotalLabel = $('arcTotalLabel');
+  const arcNightLabel = $('arcNightLabel');
   const sheetBackdrop = $('sheetBackdrop');
   const endSheet = $('endSheet');
   const sheetEndTime = $('sheetEndTime');
@@ -1092,23 +1578,25 @@
   const editCancel = $('editCancel');
   const editSave = $('editSave');
   const toast = $('toast');
-  const logTable = $('logTable');
+  const timelineContent = $('timelineContent');
   const logEmpty = $('logEmpty');
   const logKpiDistance = $('logKpiDistance');
   const logKpiTime = $('logKpiTime');
   const logKpiRides = $('logKpiRides');
-  const logMonthLabel = $('logMonthLabel');
-  const copyTodayBtn = $('copyTodayBtn');
   const csvFileInput = $('csvFileInput');
 
-  // Logbook progress elements
-  const progressOverallPct = $('progressOverallPct');
-  const progressTotalHours = $('progressTotalHours');
-  const progressTotalPct = $('progressTotalPct');
-  const progressTotalFill = $('progressTotalFill');
-  const progressNightHours = $('progressNightHours');
-  const progressNightPct = $('progressNightPct');
-  const progressNightFill = $('progressNightFill');
+  // Quick Log sheet
+  const quickLogBtn = $('quickLogBtn');
+  const quickLogSheet = $('quickLogSheet');
+  const quickStart = $('quickStart');
+  const quickEnd = $('quickEnd');
+  const quickOdoStart = $('quickOdoStart');
+  const quickOdoEnd = $('quickOdoEnd');
+  const quickNotes = $('quickNotes');
+  const quickCalcTime = $('quickCalcTime');
+  const quickCalcDist = $('quickCalcDist');
+  const quickCancel = $('quickCancel');
+  const quickSave = $('quickSave');
 
   // Ride options sheet
   const rideOptionsSheet = $('rideOptionsSheet');
@@ -1372,35 +1860,61 @@
     return { dist, time, dayMin, nightMin };
   }
 
+  // Arc half-circumference for r=100 and r=75
+  const ARC_LEN_OUTER = Math.PI * 100;   // ≈ 314.159
+  const ARC_LEN_INNER = Math.PI * 75;    // ≈ 235.619
+
+  // Compute label position on a half-circle arc rotated 180° (so 0% is at the
+  // LEFT and 100% is at the RIGHT). pct is in [0, 100].
+  function arcLabelPos(pct, r, offset) {
+    // Angle measured from left (180°) going clockwise to right (0°/360°)
+    // pct 0 → 180°, pct 100 → 0°
+    const angleDeg = 180 - (Math.max(0, Math.min(100, pct)) / 100) * 180;
+    const a = angleDeg * Math.PI / 180;
+    const rr = r + offset;
+    return { x: -rr * Math.cos(a), y: -rr * Math.sin(a) };
+  }
+
   function renderHome() {
     const t = totals();
-    kpiDistance.textContent = `${t.dist.toFixed(0)}`;
-    kpiDistanceSub.textContent = `${rides.length} ride${rides.length === 1 ? '' : 's'}`;
-    kpiTime.textContent = fmtDuration(t.time);
-    const now = new Date();
-    kpiTimeSub.textContent = `${MONTHS_SHORT[now.getMonth()]} ${now.getFullYear()}`;
+    gaugeDistVal.textContent = t.dist.toFixed(0);
+    gaugeDistSub.textContent = `${rides.length} ride${rides.length === 1 ? '' : 's'}`;
+
     const lo = lastOdo();
     if (lo != null) {
-      kpiOdo.textContent = `${lo.toFixed(0)}`;
-      kpiOdoUnit.textContent = 'km';
+      gaugeOdoVal.textContent = lo.toFixed(0);
+      gaugeOdoUnit.textContent = 'km';
+      gaugeOdoFooter.textContent = lo.toFixed(0);
     } else {
-      kpiOdo.textContent = '—';
-      kpiOdoUnit.textContent = '';
+      gaugeOdoVal.textContent = '—';
+      gaugeOdoUnit.textContent = '';
+      gaugeOdoFooter.textContent = '—';
     }
 
-    // Logbook progress
+    // Logbook progress (math preserved exactly)
     const totalHours = t.time / 60;
     const nightHours = t.nightMin / 60;
     const totalPct = Math.min(100, Math.round(totalHours / TARGET_TOTAL_HOURS * 100));
     const nightPct = Math.min(100, Math.round(nightHours / TARGET_NIGHT_HOURS * 100));
     const overallPct = Math.min(totalPct, nightPct);
-    progressOverallPct.textContent = overallPct;
-    progressTotalHours.textContent = `${totalHours.toFixed(1)}h`;
-    progressTotalPct.textContent = totalPct;
-    progressTotalFill.style.width = totalPct + '%';
-    progressNightHours.textContent = `${nightHours.toFixed(1)}h`;
-    progressNightPct.textContent = nightPct;
-    progressNightFill.style.width = nightPct + '%';
+
+    gaugeCentreTime.textContent = fmtDuration(t.time);
+    gaugeNightHours.textContent = `${nightHours.toFixed(1)}h`;
+    gaugeOverallPct.textContent = overallPct;
+
+    // Drive the SVG arcs via stroke-dasharray
+    arcTotal.setAttribute('stroke-dasharray', `${(totalPct / 100) * ARC_LEN_OUTER} 1000`);
+    arcNight.setAttribute('stroke-dasharray', `${(nightPct / 100) * ARC_LEN_INNER} 1000`);
+
+    // Position the % labels near the END of each filled arc
+    const totalLabel = arcLabelPos(totalPct, 100, 22);
+    const nightLabel = arcLabelPos(nightPct, 75, 18);
+    arcTotalLabel.setAttribute('x', totalLabel.x);
+    arcTotalLabel.setAttribute('y', totalLabel.y + 3);
+    arcTotalLabel.textContent = `${totalPct}%`;
+    arcNightLabel.setAttribute('x', nightLabel.x);
+    arcNightLabel.setAttribute('y', nightLabel.y + 3);
+    arcNightLabel.textContent = `${nightPct}%`;
 
     if (activeRide) {
       startBtn.classList.add('disabled');
@@ -1444,6 +1958,49 @@
     return word + '…';
   }
 
+  // Time-only "h:mm AM/PM"
+  function fmtTimeShort(ts) {
+    const d = new Date(ts);
+    let h = d.getHours();
+    const m = d.getMinutes().toString().padStart(2, '0');
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12; if (h === 0) h = 12;
+    return `${h}:${m} ${ampm}`;
+  }
+
+  function dayClass(ride) {
+    const hasDay = isFinite(ride.dayMinutes) && ride.dayMinutes >= 0.5;
+    const hasNight = isFinite(ride.nightMinutes) && ride.nightMinutes >= 0.5;
+    if (hasDay && hasNight) return 'both';
+    if (hasNight) return 'night';
+    return 'day';
+  }
+
+  function dayNightIconsHtml(ride) {
+    const which = dayClass(ride);
+    const sun = '<span class="sun" title="Daytime">☀️</span>';
+    const moon = '<span class="moon" title="Nighttime">🌙</span>';
+    if (which === 'both') return `<span class="daynight-icons">${sun}${moon}</span>`;
+    if (which === 'night') return `<span class="daynight-icons">${moon}</span>`;
+    return `<span class="daynight-icons">${sun}</span>`;
+  }
+
+  // Group rides into months in their newest-first order
+  function groupByMonth(rs) {
+    const groups = [];
+    let cur = null;
+    for (const r of rs) {
+      const d = new Date(r.startTime);
+      const key = `${d.getFullYear()}-${d.getMonth()}`;
+      if (!cur || cur.key !== key) {
+        cur = { key, label: `${MONTHS_LONG[d.getMonth()]} ${d.getFullYear()}`, rides: [] };
+        groups.push(cur);
+      }
+      cur.rides.push(r);
+    }
+    return groups;
+  }
+
   function renderLog() {
     const t = totals();
     logKpiDistance.textContent = `${t.dist.toFixed(0)}`;
@@ -1451,96 +2008,218 @@
     logKpiRides.textContent = rides.length.toString();
 
     if (rides.length === 0) {
-      logMonthLabel.textContent = '—';
-      logTable.innerHTML = '';
+      timelineContent.innerHTML = '';
       logEmpty.style.display = 'block';
       return;
     }
     logEmpty.style.display = 'none';
 
-    // Month label from newest ride
-    const newest = rides[0];
-    const nd = new Date(newest.startTime);
-    logMonthLabel.textContent = `${MONTHS_LONG[nd.getMonth()]} ${nd.getFullYear()}`;
+    renderTimeline();
+  }
 
-    // Transposed table: rows = field labels, columns = rides (newest first)
-    const gearSvg = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/></svg>';
+  // ---------- TIMELINE & JOURNEY CARDS ----------
+  function renderTimeline() {
+    const groups = groupByMonth(rides);
+    timelineContent.innerHTML = groups.map(g => {
+      const head = `<div class="timeline-month"><div class="timeline-dot"></div><div class="timeline-month-label">${g.label}</div></div>`;
+      const cards = g.rides.map(ride => buildJourneyRow(ride)).join('');
+      return head + cards;
+    }).join('');
 
-    const rowDefs = [
-      { key: 'start', label: 'Start', cls: '' },
-      { key: 'end', label: 'End', cls: '' },
-      { key: 'odoEnd', label: 'Odo End', cls: '' },
-      { key: 'odoStart', label: 'Odo Start', cls: 'odo-start' },
-      { key: 'time', label: 'Time', cls: 'muted' },
-      { key: 'distance', label: 'Distance', cls: 'muted' },
-      { key: 'night', label: 'Night', cls: 'night-row' },
-      { key: 'notes', label: 'Notes', cls: 'notes' },
-      { key: 'options', label: '', cls: 'options' }
-    ];
-
-    const moonSvg = '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3h.393a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"/></svg>';
-
-    const trs = rowDefs.map(rowDef => {
-      let html = `<tr><td class="label-cell">${rowDef.label}</td>`;
-      for (const ride of rides) {
-        let val = '';
-        let extraAttr = '';
-        switch (rowDef.key) {
-          case 'start':
-            val = fmtDateTime(ride.startTime);
-            break;
-          case 'end':
-            val = fmtDateTime(ride.endTime);
-            break;
-          case 'odoEnd':
-            val = fmtOdo(ride.odoEnd);
-            break;
-          case 'odoStart':
-            val = fmtOdo(ride.odoStart);
-            extraAttr = ` data-ride-id="${ride.id}"`;
-            break;
-          case 'time':
-            val = fmtDuration(ride.timeMinutes);
-            break;
-          case 'distance':
-            val = fmtKm(ride.distanceKm);
-            break;
-          case 'night':
-            if (isFinite(ride.nightMinutes) && ride.nightMinutes >= 0.5) {
-              val = `<span class="night-cell">${moonSvg}<span>${Math.round(ride.nightMinutes)} min</span></span>`;
-            } else {
-              val = '—';
-            }
-            break;
-          case 'notes':
-            val = ride.notes ? escapeHtml(firstWord(ride.notes)) : '—';
-            break;
-          case 'options':
-            val = `<button class="gear-btn" data-ride-id="${ride.id}" aria-label="Ride options">${gearSvg}</button>`;
-            break;
-        }
-        html += `<td class="data-cell ${rowDef.cls}"${extraAttr}>${val}</td>`;
-      }
-      html += '</tr>';
-      return html;
-    });
-
-    logTable.innerHTML = trs.join('');
-
-    // Attach handlers to odo-start cells
-    logTable.querySelectorAll('.odo-start').forEach(cell => {
-      cell.addEventListener('click', () => {
-        const id = cell.getAttribute('data-ride-id');
-        openOdoEdit(id);
+    // Wire up expand/collapse, GPX, notes, options
+    timelineContent.querySelectorAll('.journey-head').forEach(head => {
+      head.addEventListener('click', () => {
+        const id = head.getAttribute('data-ride-id');
+        const card = head.closest('.journey-card');
+        const expanded = card.classList.toggle('expanded');
+        if (expanded) onCardExpanded(id);
       });
     });
-    // Attach handlers to gear buttons
-    logTable.querySelectorAll('.gear-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
+    timelineContent.querySelectorAll('.gpx-input').forEach(inp => {
+      inp.addEventListener('change', (e) => {
+        const id = inp.getAttribute('data-ride-id');
+        handleGpxUpload(e, id);
+      });
+    });
+    timelineContent.querySelectorAll('.notes-field').forEach(ta => {
+      ta.addEventListener('blur', () => {
+        const id = ta.getAttribute('data-ride-id');
+        const ride = rides.find(r => r.id === id);
+        if (!ride) return;
+        const v = ta.value.trim();
+        if (ride.notes === v) return;
+        ride.notes = v;
+        saveRides();
+      });
+    });
+    timelineContent.querySelectorAll('.journey-options-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
         const id = btn.getAttribute('data-ride-id');
         openRideOptions(id);
       });
     });
+  }
+
+  function buildJourneyRow(ride) {
+    const d = new Date(ride.startTime);
+    const dateLabel = `${d.getDate()} ${MONTHS_SHORT[d.getMonth()]} ${d.getFullYear()}`;
+    const timeRange = `${fmtTimeShort(ride.startTime)} - ${fmtTimeShort(ride.endTime)}`;
+    const dist = isFinite(ride.distanceKm) ? `${ride.distanceKm.toFixed(1)} km` : '—';
+    const osVal = isFinite(ride.odoStart) ? `${ride.odoStart.toFixed(1)} km` : '—';
+    const oeVal = isFinite(ride.odoEnd) ? `${ride.odoEnd.toFixed(1)} km` : '—';
+    const notes = escapeHtml(ride.notes || '');
+    const chevron = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+    return `
+      <div class="journey-row">
+        <div class="journey-rail-dot"></div>
+        <div class="journey-card" data-ride-id="${ride.id}">
+          <div class="journey-head" data-ride-id="${ride.id}">
+            <div class="journey-head-title">Journey Summary</div>
+            <div class="journey-head-right">
+              <span>${dateLabel}</span>
+              <span class="journey-chevron">${chevron}</span>
+            </div>
+          </div>
+          <div class="journey-body" id="body-${ride.id}">
+            <div class="journey-meta-row">
+              <div class="journey-meta-left">
+                ${dayNightIconsHtml(ride)}
+                <span class="journey-time-range">${timeRange}</span>
+              </div>
+              <div class="journey-distance">${dist}</div>
+            </div>
+            <label class="gpx-attach">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v16l-6-3V1z"/><path d="M15 7v16l6-3V4z"/><path d="M9 4l6 3"/><path d="M9 20l6 3"/></svg>
+              Attach GPS track (.gpx)
+              <input type="file" class="gpx-input" data-ride-id="${ride.id}" accept=".gpx,application/gpx+xml,application/xml,text/xml" style="display:none;">
+            </label>
+            <canvas class="map-canvas" id="canvas-${ride.id}" width="600" height="320"></canvas>
+            <div class="log-details-grid">
+              <div class="detail-item">Odometer Start<strong>${osVal}</strong></div>
+              <div class="detail-item">Odometer End<strong>${oeVal}</strong></div>
+            </div>
+            <textarea class="notes-field" data-ride-id="${ride.id}" placeholder="Add ride notes...">${notes}</textarea>
+            <div class="journey-actions">
+              <button class="journey-options-btn" data-ride-id="${ride.id}" aria-label="Ride options">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>
+                More
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function onCardExpanded(rideId) {
+    const ride = rides.find(r => r.id === rideId);
+    if (!ride) return;
+    // Redraw any stored GPX track
+    if (Array.isArray(ride.gpxCoordinates) && ride.gpxCoordinates.length > 1) {
+      const canvas = document.getElementById(`canvas-${rideId}`);
+      if (canvas) drawTrackOnCanvas(canvas, ride.gpxCoordinates);
+    }
+  }
+
+  // ---------- GPX UPLOAD ----------
+  // Simple even-stride downsample, capped at MAX_GPX_POINTS to keep
+  // localStorage usage bounded across hundreds of rides.
+  const MAX_GPX_POINTS = 500;
+  function downsamplePoints(points, max) {
+    if (points.length <= max) return points;
+    const step = points.length / max;
+    const out = [];
+    for (let i = 0; i < max; i++) out.push(points[Math.floor(i * step)]);
+    // Always preserve the final point so the end pin lands correctly
+    if (out[out.length - 1] !== points[points.length - 1]) {
+      out.push(points[points.length - 1]);
+    }
+    return out;
+  }
+
+  function drawTrackOnCanvas(canvas, coordinates) {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (!coordinates || coordinates.length === 0) return;
+
+    let minLat = 90, maxLat = -90, minLng = 180, maxLng = -180;
+    for (const p of coordinates) {
+      if (p.lat < minLat) minLat = p.lat;
+      if (p.lat > maxLat) maxLat = p.lat;
+      if (p.lng < minLng) minLng = p.lng;
+      if (p.lng > maxLng) maxLng = p.lng;
+    }
+    const padding = 24;
+    const scaleX = (canvas.width - padding * 2) / (maxLng - minLng || 1);
+    const scaleY = (canvas.height - padding * 2) / (maxLat - minLat || 1);
+    const scale = Math.min(scaleX, scaleY);
+    const offsetX = (canvas.width - (maxLng - minLng) * scale) / 2;
+    const offsetY = (canvas.height - (maxLat - minLat) * scale) / 2;
+    const project = (p) => ({
+      x: offsetX + (p.lng - minLng) * scale,
+      y: canvas.height - (offsetY + (p.lat - minLat) * scale)
+    });
+
+    // Track line
+    ctx.strokeStyle = '#d4a35d';
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    coordinates.forEach((p, i) => {
+      const { x, y } = project(p);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+
+    // Start/end pins
+    const start = project(coordinates[0]);
+    const end = project(coordinates[coordinates.length - 1]);
+    ctx.fillStyle = '#eae6da';
+    ctx.beginPath(); ctx.arc(start.x, start.y, 5, 0, 2 * Math.PI); ctx.fill();
+    ctx.beginPath(); ctx.arc(end.x, end.y, 5, 0, 2 * Math.PI); ctx.fill();
+  }
+
+  function handleGpxUpload(event, rideId) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+    const ride = rides.find(r => r.id === rideId);
+    if (!ride) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(e.target.result, 'text/xml');
+        const parseError = xml.querySelector('parsererror');
+        if (parseError) { showToast('Could not parse GPX'); return; }
+        const trkpts = xml.getElementsByTagName('trkpt');
+        if (trkpts.length === 0) { showToast('No GPS points in this file'); return; }
+
+        const all = [];
+        for (let i = 0; i < trkpts.length; i++) {
+          const lat = parseFloat(trkpts[i].getAttribute('lat'));
+          const lng = parseFloat(trkpts[i].getAttribute('lon'));
+          if (isFinite(lat) && isFinite(lng)) all.push({ lat, lng });
+        }
+        if (all.length === 0) { showToast('No valid GPS points'); return; }
+
+        const coords = downsamplePoints(all, MAX_GPX_POINTS);
+        ride.gpxCoordinates = coords;
+        saveRides();
+
+        const canvas = document.getElementById(`canvas-${rideId}`);
+        if (canvas) drawTrackOnCanvas(canvas, coords);
+        showToast(`Track attached · ${coords.length} pts`);
+      } catch (err) {
+        showToast('Could not read GPX file');
+      } finally {
+        // Reset input so re-attaching same file fires change again
+        event.target.value = '';
+      }
+    };
+    reader.readAsText(file);
   }
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, c => ({
@@ -1612,6 +2291,7 @@
     closeEndSheet();
     closeRideOptions();
     closeEditRide();
+    closeQuickLog();
   });
   sheetCancel.addEventListener('click', closeEndSheet);
 
@@ -1642,7 +2322,8 @@
       timeMinutes: (endTs - startTs) / 60000,
       distanceKm: oe - os,
       dayMinutes: split.dayMinutes,
-      nightMinutes: split.nightMinutes
+      nightMinutes: split.nightMinutes,
+      gpxCoordinates: []
     };
     rides.unshift(ride);
     saveRides();
@@ -1866,10 +2547,73 @@
     lines.push(`Daily total: ${totalDist.toFixed(1)} km · ${fmtDuration(totalMin)}`);
     return lines.join('\n');
   }
-  copyTodayBtn.addEventListener('click', async () => {
-    const text = formatTodayText();
-    await copyTextToClipboard(text);
-    showToast('Copied');
+  // ---------- QUICK LOG SHEET ----------
+  function openQuickLog() {
+    const now = Date.now();
+    const lo = lastOdo();
+    quickStart.value = tsToDatetimeLocal(now - 30 * 60 * 1000); // 30m ago default
+    quickEnd.value = tsToDatetimeLocal(now);
+    quickOdoStart.value = lo != null ? lo : '';
+    quickOdoEnd.value = '';
+    quickNotes.value = '';
+    updateQuickCalcs();
+    sheetBackdrop.classList.add('visible');
+    quickLogSheet.classList.add('visible');
+  }
+  function closeQuickLog() {
+    sheetBackdrop.classList.remove('visible');
+    quickLogSheet.classList.remove('visible');
+  }
+  function updateQuickCalcs() {
+    const startTs = datetimeLocalToTs(quickStart.value);
+    const endTs = datetimeLocalToTs(quickEnd.value);
+    if (isFinite(startTs) && isFinite(endTs) && endTs > startTs) {
+      quickCalcTime.textContent = fmtDuration((endTs - startTs) / 60000);
+    } else {
+      quickCalcTime.textContent = '—';
+    }
+    const os = parseFloat(quickOdoStart.value);
+    const oe = parseFloat(quickOdoEnd.value);
+    if (isFinite(os) && isFinite(oe)) {
+      quickCalcDist.textContent = fmtKm(oe - os);
+    } else {
+      quickCalcDist.textContent = '—';
+    }
+  }
+  quickStart.addEventListener('input', updateQuickCalcs);
+  quickEnd.addEventListener('input', updateQuickCalcs);
+  quickOdoStart.addEventListener('input', updateQuickCalcs);
+  quickOdoEnd.addEventListener('input', updateQuickCalcs);
+  quickCancel.addEventListener('click', closeQuickLog);
+  quickLogBtn.addEventListener('click', openQuickLog);
+  quickSave.addEventListener('click', () => {
+    const startTs = datetimeLocalToTs(quickStart.value);
+    const endTs = datetimeLocalToTs(quickEnd.value);
+    const os = parseFloat(quickOdoStart.value);
+    const oe = parseFloat(quickOdoEnd.value);
+    if (!isFinite(startTs) || !isFinite(endTs)) { showToast('Invalid date/time'); return; }
+    if (endTs <= startTs) { showToast('End must be after Start'); return; }
+    if (!isFinite(os) || !isFinite(oe)) { showToast('Invalid odo reading'); return; }
+    const split = dayNightSplit(startTs, endTs);
+    const ride = {
+      id: 'q_' + startTs + '_' + Math.random().toString(36).slice(2, 7),
+      startTime: startTs,
+      endTime: endTs,
+      odoStart: os,
+      odoEnd: oe,
+      notes: quickNotes.value.trim(),
+      timeMinutes: (endTs - startTs) / 60000,
+      distanceKm: oe - os,
+      dayMinutes: split.dayMinutes,
+      nightMinutes: split.nightMinutes,
+      gpxCoordinates: []
+    };
+    rides.push(ride);
+    rides.sort((a, b) => b.startTime - a.startTime);
+    saveRides();
+    closeQuickLog();
+    render();
+    showToast('Ride logged');
   });
 
   // ---------- CSV EXPORT ----------
