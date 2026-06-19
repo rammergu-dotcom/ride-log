@@ -67,25 +67,24 @@
   }
   .header-title {
     font-family: "Helvetica Neue", -apple-system, Helvetica, sans-serif;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.03em;
     text-transform: uppercase;
     color: #F5F2EB;
     line-height: 1.1;
   }
   .header-sub {
     font-size: 10px;
-    color: rgba(245, 242, 235, 0.35);
-    letter-spacing: 0.06em;
+    color: rgba(245, 242, 235, 0.5);
     margin-top: 2px;
   }
   .header-vin {
     font-family: ui-monospace, Menlo, Monaco, "SF Mono", monospace;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     color: rgba(245, 242, 235, 0.45);
-    letter-spacing: 0.14em;
+    letter-spacing: 0.1em;
   }
 
   /* SCREEN CONTAINER */
@@ -107,9 +106,9 @@
     align-items: center;
     justify-content: center;
     background: #2A2820;
-    padding: 20px;
-    height: 200px;
-    min-height: 200px;
+    padding: 16px 20px;
+    min-height: 160px;
+    overflow: hidden;
   }
   .bike-area img {
     max-height: 100%;
@@ -163,7 +162,7 @@
   /* KPI STRIP */
   .kpi-strip {
     display: flex;
-    height: 90px;
+    height: 92px;
     background: #3C4035;
     flex-shrink: 0;
   }
@@ -174,7 +173,7 @@
     justify-content: center;
     align-items: center;
     padding: 0 6px;
-    border-right: 1px solid rgba(245, 242, 235, 0.08);
+    border-right: 1px solid rgba(245, 242, 235, 0.1);
     text-align: center;
   }
   .kpi-card:last-child {
@@ -186,12 +185,12 @@
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: rgba(245, 242, 235, 0.3);
+    color: rgba(245, 242, 235, 0.4);
     margin-bottom: 6px;
   }
   .kpi-value {
     font-family: "Helvetica Neue", -apple-system, Helvetica, sans-serif;
-    font-size: 30px;
+    font-size: 26px;
     font-weight: 200;
     color: #F5F2EB;
     line-height: 1;
@@ -199,13 +198,172 @@
   .kpi-unit {
     font-size: 12px;
     font-weight: 400;
-    color: rgba(245, 242, 235, 0.35);
+    color: rgba(245, 242, 235, 0.4);
     margin-left: 3px;
   }
   .kpi-sub {
     font-size: 10px;
-    color: rgba(245, 242, 235, 0.25);
-    margin-top: 6px;
+    color: rgba(245, 242, 235, 0.3);
+    margin-top: 2px;
+  }
+
+  /* LOGBOOK PROGRESS */
+  .logbook-progress {
+    padding: 14px 16px 16px 16px;
+    border-bottom: 0.5px solid rgba(245, 242, 235, 0.06);
+    flex-shrink: 0;
+  }
+  .logbook-progress-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .logbook-progress-label {
+    font-size: 11px;
+    color: rgba(245, 242, 235, 0.4);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .logbook-progress-overall {
+    font-size: 13px;
+    color: #F5F2EB;
+    font-weight: 500;
+  }
+  .progress-row {
+    margin-bottom: 10px;
+  }
+  .progress-row:last-child {
+    margin-bottom: 0;
+  }
+  .progress-row-labels {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5px;
+  }
+  .progress-row-left {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: rgba(245, 242, 235, 0.55);
+  }
+  .progress-row-right {
+    font-size: 12px;
+  }
+  .progress-row-right .pr-hours {
+    color: #F5F2EB;
+    font-weight: 500;
+  }
+  .progress-row-right .pr-target {
+    color: rgba(245, 242, 235, 0.35);
+  }
+  .progress-row-right .pr-pct {
+    color: rgba(245, 242, 235, 0.4);
+  }
+  .progress-bar {
+    height: 7px;
+    background: rgba(245, 242, 235, 0.08);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+  .progress-bar-fill.total {
+    background: #F5F2EB;
+  }
+  .progress-bar-fill.night {
+    background: #BA7517;
+  }
+  .icon {
+    display: inline-block;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+
+  /* LOG MONTH ROW */
+  .log-month-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px 10px 16px;
+    flex-shrink: 0;
+  }
+  .log-month-label {
+    font-size: 13px;
+    color: #F5F2EB;
+    font-weight: 500;
+  }
+  .log-copy-today-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: transparent;
+    border: none;
+    color: rgba(245, 242, 235, 0.4);
+    font-family: inherit;
+    font-size: 11px;
+    cursor: pointer;
+    padding: 4px 6px;
+  }
+  .log-copy-today-btn:active {
+    color: rgba(245, 242, 235, 0.7);
+  }
+
+  /* GEAR ICON IN TABLE */
+  .gear-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(245, 242, 235, 0.07);
+    border: none;
+    color: rgba(245, 242, 235, 0.55);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+  }
+  .gear-btn:active {
+    background: rgba(245, 242, 235, 0.15);
+  }
+
+  /* RIDE OPTIONS SHEET */
+  .option-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 4px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(245, 242, 235, 0.08);
+    color: #F5F2EB;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: left;
+    width: 100%;
+    cursor: pointer;
+  }
+  .option-item:last-child {
+    border-bottom: none;
+  }
+  .option-item:active {
+    background: rgba(245, 242, 235, 0.05);
+  }
+  .option-item .icon {
+    color: rgba(245, 242, 235, 0.7);
+  }
+  .option-item.danger {
+    color: #F09595;
+  }
+  .option-item.danger .icon {
+    color: #F09595;
   }
 
   /* BUTTON ROW */
@@ -263,27 +421,36 @@
     border-top: 1px solid rgba(245, 242, 235, 0.08);
     padding-bottom: env(safe-area-inset-bottom);
     flex-shrink: 0;
+    min-height: 0;
   }
   .tab-btn {
     flex: 1;
-    padding: 12px 8px 10px 8px;
+    padding: 9px 8px;
     background: none;
     border: none;
     color: rgba(245, 242, 235, 0.4);
     font-family: inherit;
     font-size: 11px;
     font-weight: 600;
-    letter-spacing: 1px;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    line-height: 1;
   }
   .tab-btn.active {
     color: #F5F2EB;
   }
   .tab-icon {
-    display: block;
-    font-size: 18px;
-    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 14px;
+    line-height: 1;
   }
 
   /* LOG TAB */
@@ -614,8 +781,8 @@
 <div class="app">
   <div class="header">
     <div class="header-left">
-      <div class="header-title">Ride Log</div>
-      <div class="header-sub">RE Classic 350 · 2022</div>
+      <div class="header-title">My Ride</div>
+      <div class="header-sub">RE Classic 350 · Signals edition · 2022</div>
     </div>
     <div class="header-vin">RE266733</div>
   </div>
@@ -630,9 +797,6 @@
 
   <!-- HOME SCREEN -->
   <div id="homeScreen" class="screen active">
-    <div class="bike-area">
-      <img src="bike.png" alt="Royal Enfield" onerror="this.style.display='none'">
-    </div>
     <div class="kpi-strip">
       <div class="kpi-card">
         <div class="kpi-label">Total Dist</div>
@@ -650,6 +814,39 @@
         <div class="kpi-sub">last reading</div>
       </div>
     </div>
+
+    <div class="logbook-progress">
+      <div class="logbook-progress-header">
+        <div class="logbook-progress-label">Logbook Progress</div>
+        <div class="logbook-progress-overall"><span id="progressOverallPct">0</span>% overall</div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-row-labels">
+          <div class="progress-row-left">Total hours</div>
+          <div class="progress-row-right">
+            <span class="pr-hours" id="progressTotalHours">0.0h</span><span class="pr-target"> / 120h</span><span class="pr-pct"> · <span id="progressTotalPct">0</span>%</span>
+          </div>
+        </div>
+        <div class="progress-bar"><div class="progress-bar-fill total" id="progressTotalFill" style="width:0%"></div></div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-row-labels">
+          <div class="progress-row-left">
+            <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3h.393a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"/></svg>
+            <span>Night hours</span>
+          </div>
+          <div class="progress-row-right">
+            <span class="pr-hours" id="progressNightHours">0.0h</span><span class="pr-target"> / 20h</span><span class="pr-pct"> · <span id="progressNightPct">0</span>%</span>
+          </div>
+        </div>
+        <div class="progress-bar"><div class="progress-bar-fill night" id="progressNightFill" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="bike-area">
+      <img src="bike.png" alt="Royal Enfield" onerror="this.style.display='none'">
+    </div>
+
     <div class="button-row">
       <button class="btn btn-start" id="startBtn">Start Ride</button>
       <button class="btn btn-end" id="endBtn">End Ride</button>
@@ -658,30 +855,31 @@
 
   <!-- LOG SCREEN -->
   <div id="logScreen" class="screen">
-    <div class="log-header">
-      <div class="log-header-row">
-        <div>
-          <div class="log-title">Ride Log <span id="logCount" style="color:rgba(245,242,235,0.5);font-weight:400;font-size:14px;"></span></div>
-          <div class="log-subtitle" id="logSubtitle"></div>
-        </div>
-        <button class="log-import-btn" id="importBtn">Import</button>
+    <div class="kpi-strip">
+      <div class="kpi-card">
+        <div class="kpi-label">Distance</div>
+        <div class="kpi-value"><span id="logKpiDistance">0</span><span class="kpi-unit">km</span></div>
+        <div class="kpi-sub" id="logKpiDistanceSub">all time</div>
       </div>
-      <input type="file" id="csvFileInput" accept=".csv,text/csv,text/plain" style="display:none;">
-    </div>
-    <div class="log-totals">
-      <div class="log-total-card">
-        <div class="log-total-label">Distance</div>
-        <div class="log-total-value" id="logTotalDist">0 km</div>
+      <div class="kpi-card">
+        <div class="kpi-label">Time</div>
+        <div class="kpi-value" id="logKpiTime">0h 0m</div>
+        <div class="kpi-sub" id="logKpiTimeSub">all time</div>
       </div>
-      <div class="log-total-card">
-        <div class="log-total-label">Time</div>
-        <div class="log-total-value" id="logTotalTime">0h 0m</div>
-      </div>
-      <div class="log-total-card">
-        <div class="log-total-label">Rides</div>
-        <div class="log-total-value" id="logTotalRides">0</div>
+      <div class="kpi-card">
+        <div class="kpi-label">Rides</div>
+        <div class="kpi-value" id="logKpiRides">0</div>
+        <div class="kpi-sub" id="logKpiRidesSub">total</div>
       </div>
     </div>
+    <div class="log-month-row">
+      <div class="log-month-label" id="logMonthLabel">—</div>
+      <button class="log-copy-today-btn" id="copyTodayBtn">
+        <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z"/><path d="M4.012 16.737a2 2 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"/></svg>
+        <span>Copy today</span>
+      </button>
+    </div>
+    <input type="file" id="csvFileInput" accept=".csv,text/csv,text/plain" style="display:none;">
     <div class="log-table-container">
       <div class="log-table-scroll" id="logTableScroll">
         <table class="log-table" id="logTable"></table>
@@ -694,11 +892,11 @@
   <div class="tab-bar">
     <button class="tab-btn active" data-tab="home">
       <span class="tab-icon">●</span>
-      Home
+      <span>Home</span>
     </button>
     <button class="tab-btn" data-tab="log">
-      <span class="tab-icon">≡</span>
-      Log
+      <span class="tab-icon">●</span>
+      <span>Log</span>
     </button>
   </div>
 </div>
@@ -742,6 +940,76 @@
   <div class="sheet-buttons">
     <button class="btn-cancel" id="sheetCancel">Cancel</button>
     <button class="btn-save" id="sheetSave">Save Ride</button>
+  </div>
+</div>
+
+<!-- RIDE OPTIONS SHEET -->
+<div class="sheet" id="rideOptionsSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title" id="rideOptionsTitle">Ride Options</div>
+  <div>
+    <button class="option-item" id="optEditRide">
+      <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"/><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"/><path d="M16 5l3 3"/></svg>
+      <span>Edit ride</span>
+    </button>
+    <button class="option-item" id="optCopyRide">
+      <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z"/><path d="M4.012 16.737a2 2 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"/></svg>
+      <span>Copy ride data</span>
+    </button>
+    <button class="option-item" id="optImportLog">
+      <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12"/><path d="M8 12l4 4l4 -4"/><path d="M4 19h16"/></svg>
+      <span>Import log file</span>
+    </button>
+    <button class="option-item danger" id="optDeleteRide">
+      <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg>
+      <span>Delete ride</span>
+    </button>
+  </div>
+</div>
+
+<!-- EDIT RIDE SHEET -->
+<div class="sheet" id="editRideSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title">Edit Ride</div>
+
+  <div class="field">
+    <div class="field-label">Start</div>
+    <input class="field-input" type="datetime-local" id="editRideStart">
+  </div>
+
+  <div class="field">
+    <div class="field-label">End</div>
+    <input class="field-input" type="datetime-local" id="editRideEnd">
+  </div>
+
+  <div class="field">
+    <div class="field-label">Odometer Start (km)</div>
+    <input class="field-input" type="number" inputmode="decimal" id="editRideOdoStart" step="0.1">
+  </div>
+
+  <div class="field">
+    <div class="field-label">Odometer End (km)</div>
+    <input class="field-input" type="number" inputmode="decimal" id="editRideOdoEnd" step="0.1">
+  </div>
+
+  <div class="field">
+    <div class="field-label">Notes</div>
+    <input class="field-input" type="text" id="editRideNotes" placeholder="Optional">
+  </div>
+
+  <div class="field">
+    <div class="field-label">Calculated Time</div>
+    <div class="field-value formula" id="editRideCalcTime">—</div>
+  </div>
+
+  <div class="field">
+    <div class="field-label">Calculated Distance</div>
+    <div class="field-value formula" id="editRideCalcDist">—</div>
+  </div>
+
+  <div class="sheet-buttons">
+    <button class="btn-cancel" id="editRideCancel">Cancel</button>
+    <button class="btn-save" id="editRideSave">Save</button>
   </div>
 </div>
 
@@ -814,13 +1082,43 @@
   const toast = $('toast');
   const logTable = $('logTable');
   const logEmpty = $('logEmpty');
-  const logCount = $('logCount');
-  const logSubtitle = $('logSubtitle');
-  const logTotalDist = $('logTotalDist');
-  const logTotalTime = $('logTotalTime');
-  const logTotalRides = $('logTotalRides');
-  const importBtn = $('importBtn');
+  const logKpiDistance = $('logKpiDistance');
+  const logKpiTime = $('logKpiTime');
+  const logKpiRides = $('logKpiRides');
+  const logMonthLabel = $('logMonthLabel');
+  const copyTodayBtn = $('copyTodayBtn');
   const csvFileInput = $('csvFileInput');
+
+  // Logbook progress elements
+  const progressOverallPct = $('progressOverallPct');
+  const progressTotalHours = $('progressTotalHours');
+  const progressTotalPct = $('progressTotalPct');
+  const progressTotalFill = $('progressTotalFill');
+  const progressNightHours = $('progressNightHours');
+  const progressNightPct = $('progressNightPct');
+  const progressNightFill = $('progressNightFill');
+
+  // Ride options sheet
+  const rideOptionsSheet = $('rideOptionsSheet');
+  const optEditRide = $('optEditRide');
+  const optCopyRide = $('optCopyRide');
+  const optImportLog = $('optImportLog');
+  const optDeleteRide = $('optDeleteRide');
+
+  // Edit ride sheet
+  const editRideSheet = $('editRideSheet');
+  const editRideStart = $('editRideStart');
+  const editRideEnd = $('editRideEnd');
+  const editRideOdoStart = $('editRideOdoStart');
+  const editRideOdoEnd = $('editRideOdoEnd');
+  const editRideNotes = $('editRideNotes');
+  const editRideCalcTime = $('editRideCalcTime');
+  const editRideCalcDist = $('editRideCalcDist');
+  const editRideCancel = $('editRideCancel');
+  const editRideSave = $('editRideSave');
+
+  let optionsRideId = null;  // ride targeted by the options sheet
+  let editingFullRideId = null; // ride being edited in the edit sheet
 
   // ---------- STORAGE ----------
   function loadRides() {
@@ -909,19 +1207,157 @@
     showToast._t = setTimeout(() => toast.classList.remove('visible'), ms);
   }
 
+  // ---------- SUNCALC (inlined, MIT — Vladimir Agafonkin) ----------
+  // Minimal subset exposing SunCalc.getTimes(date, lat, lng) which returns
+  // an object including .sunrise and .sunset as Date instances.
+  const SunCalc = (function() {
+    const PI = Math.PI, sin = Math.sin, cos = Math.cos, tan = Math.tan,
+          asin = Math.asin, atan = Math.atan2, acos = Math.acos, rad = PI / 180;
+    const dayMs = 1000 * 60 * 60 * 24, J1970 = 2440588, J2000 = 2451545;
+    const e = rad * 23.4397;
+    const J0 = 0.0009;
+    function toJulian(d) { return d.valueOf() / dayMs - 0.5 + J1970; }
+    function fromJulian(j) { return new Date((j + 0.5 - J1970) * dayMs); }
+    function toDays(d) { return toJulian(d) - J2000; }
+    function rightAscension(l, b) { return atan(sin(l) * cos(e) - tan(b) * sin(e), cos(l)); }
+    function declination(l, b) { return asin(sin(b) * cos(e) + cos(b) * sin(e) * sin(l)); }
+    function solarMeanAnomaly(d) { return rad * (357.5291 + 0.98560028 * d); }
+    function eclipticLongitude(M) {
+      const C = rad * (1.9148 * sin(M) + 0.02 * sin(2 * M) + 0.0003 * sin(3 * M));
+      const P = rad * 102.9372;
+      return M + C + P + PI;
+    }
+    function julianCycle(d, lw) { return Math.round(d - J0 - lw / (2 * PI)); }
+    function approxTransit(Ht, lw, n) { return J0 + (Ht + lw) / (2 * PI) + n; }
+    function solarTransitJ(ds, M, L) { return J2000 + ds + 0.0053 * sin(M) - 0.0069 * sin(2 * L); }
+    function hourAngle(h, phi, d) { return acos((sin(h) - sin(phi) * sin(d)) / (cos(phi) * cos(d))); }
+    function getSetJ(h, lw, phi, dec, n, M, L) {
+      const w = hourAngle(h, phi, dec);
+      const a = approxTransit(w, lw, n);
+      return solarTransitJ(a, M, L);
+    }
+    const times = [
+      [-0.833, 'sunrise', 'sunset'],
+      [-0.3, 'sunriseEnd', 'sunsetStart'],
+      [-6, 'dawn', 'dusk']
+    ];
+    return {
+      getTimes(date, lat, lng) {
+        const lw = rad * -lng, phi = rad * lat, d = toDays(date),
+              n = julianCycle(d, lw), ds = approxTransit(0, lw, n),
+              M = solarMeanAnomaly(ds), L = eclipticLongitude(M),
+              dec = declination(L, 0), Jnoon = solarTransitJ(ds, M, L);
+        const result = { solarNoon: fromJulian(Jnoon), nadir: fromJulian(Jnoon - 0.5) };
+        for (let i = 0; i < times.length; i++) {
+          const t = times[i];
+          const Jset = getSetJ(t[0] * rad, lw, phi, dec, n, M, L);
+          const Jrise = Jnoon - (Jset - Jnoon);
+          result[t[1]] = fromJulian(Jrise);
+          result[t[2]] = fromJulian(Jset);
+        }
+        return result;
+      }
+    };
+  })();
+
+  // ---------- DAY/NIGHT SPLIT ----------
+  const SYDNEY_LAT = -33.8688;
+  const SYDNEY_LNG = 151.2093;
+
+  // Returns { dayMinutes, nightMinutes } for a ride defined by ms timestamps.
+  // Walks the ride window boundary-by-boundary so multi-transition rides
+  // (e.g. spanning midnight or crossing both sunset and sunrise) split correctly.
+  function dayNightSplit(startTs, endTs) {
+    const totalMs = endTs - startTs;
+    if (!(totalMs > 0)) return { dayMinutes: 0, nightMinutes: 0 };
+
+    // Collect sunrise/sunset events around the ride window (1 day buffer either side)
+    const events = [];
+    const cursor = new Date(startTs);
+    cursor.setHours(12, 0, 0, 0);
+    cursor.setDate(cursor.getDate() - 1);
+    const limit = new Date(endTs);
+    limit.setDate(limit.getDate() + 1);
+    while (cursor <= limit) {
+      const t = SunCalc.getTimes(cursor, SYDNEY_LAT, SYDNEY_LNG);
+      if (t.sunrise && !isNaN(t.sunrise.getTime())) {
+        events.push({ t: t.sunrise.getTime(), type: 'sunrise' });
+      }
+      if (t.sunset && !isNaN(t.sunset.getTime())) {
+        events.push({ t: t.sunset.getTime(), type: 'sunset' });
+      }
+      cursor.setDate(cursor.getDate() + 1);
+    }
+    events.sort((a, b) => a.t - b.t);
+
+    // State at startTs: find the last event at or before startTs
+    let isDay;
+    let lastBefore = null;
+    for (const ev of events) {
+      if (ev.t > startTs) break;
+      lastBefore = ev;
+    }
+    if (lastBefore) {
+      isDay = lastBefore.type === 'sunrise';
+    } else if (events.length > 0) {
+      // startTs is before all events; state is opposite of the first event type
+      isDay = events[0].type === 'sunset';
+    } else {
+      // fallback: assume day
+      isDay = true;
+    }
+
+    let dayMs = 0, nightMs = 0;
+    let segStart = startTs;
+    for (const ev of events) {
+      if (ev.t <= segStart) continue;
+      if (ev.t >= endTs) break;
+      const span = ev.t - segStart;
+      if (isDay) dayMs += span; else nightMs += span;
+      segStart = ev.t;
+      isDay = ev.type === 'sunrise';
+    }
+    const tail = endTs - segStart;
+    if (isDay) dayMs += tail; else nightMs += tail;
+
+    return { dayMinutes: dayMs / 60000, nightMinutes: nightMs / 60000 };
+  }
+
+  // Backfill dayMinutes/nightMinutes on rides that don't have them yet.
+  // Idempotent — skips rides that already have both fields set.
+  function backfillDayNight() {
+    let touched = 0;
+    for (const r of rides) {
+      if (typeof r.dayMinutes === 'number' && typeof r.nightMinutes === 'number') continue;
+      if (!isFinite(r.startTime) || !isFinite(r.endTime)) continue;
+      const split = dayNightSplit(r.startTime, r.endTime);
+      r.dayMinutes = split.dayMinutes;
+      r.nightMinutes = split.nightMinutes;
+      touched++;
+    }
+    if (touched > 0) saveRides();
+  }
+
   // ---------- RENDER ----------
+  const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const MONTHS_LONG = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const TARGET_TOTAL_HOURS = 120;
+  const TARGET_NIGHT_HOURS = 20;
+
   function lastOdo() {
     if (rides.length === 0) return null;
     // rides are stored newest-first; the newest odoEnd is the last reading
     return rides[0].odoEnd;
   }
   function totals() {
-    let dist = 0, time = 0;
+    let dist = 0, time = 0, dayMin = 0, nightMin = 0;
     for (const r of rides) {
       if (isFinite(r.distanceKm)) dist += r.distanceKm;
       if (isFinite(r.timeMinutes)) time += r.timeMinutes;
+      if (isFinite(r.dayMinutes)) dayMin += r.dayMinutes;
+      if (isFinite(r.nightMinutes)) nightMin += r.nightMinutes;
     }
-    return { dist, time };
+    return { dist, time, dayMin, nightMin };
   }
 
   function renderHome() {
@@ -929,9 +1365,8 @@
     kpiDistance.textContent = `${t.dist.toFixed(0)}`;
     kpiDistanceSub.textContent = `${rides.length} ride${rides.length === 1 ? '' : 's'}`;
     kpiTime.textContent = fmtDuration(t.time);
-    const monthShort = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     const now = new Date();
-    kpiTimeSub.textContent = `${monthShort[now.getMonth()]} ${now.getFullYear()}`;
+    kpiTimeSub.textContent = `${MONTHS_SHORT[now.getMonth()]} ${now.getFullYear()}`;
     const lo = lastOdo();
     if (lo != null) {
       kpiOdo.textContent = `${lo.toFixed(0)}`;
@@ -940,6 +1375,20 @@
       kpiOdo.textContent = '—';
       kpiOdoUnit.textContent = '';
     }
+
+    // Logbook progress
+    const totalHours = t.time / 60;
+    const nightHours = t.nightMin / 60;
+    const totalPct = Math.min(100, Math.round(totalHours / TARGET_TOTAL_HOURS * 100));
+    const nightPct = Math.min(100, Math.round(nightHours / TARGET_NIGHT_HOURS * 100));
+    const overallPct = Math.min(totalPct, nightPct);
+    progressOverallPct.textContent = overallPct;
+    progressTotalHours.textContent = `${totalHours.toFixed(1)}h`;
+    progressTotalPct.textContent = totalPct;
+    progressTotalFill.style.width = totalPct + '%';
+    progressNightHours.textContent = `${nightHours.toFixed(1)}h`;
+    progressNightPct.textContent = nightPct;
+    progressNightFill.style.width = nightPct + '%';
 
     if (activeRide) {
       startBtn.classList.add('disabled');
@@ -975,28 +1424,36 @@
     }
   }
 
+  function firstWord(s) {
+    const trimmed = String(s || '').trim();
+    if (!trimmed) return '';
+    const m = trimmed.match(/^[^\s,;.]+/);
+    const word = m ? m[0] : trimmed.split(/\s+/)[0];
+    return word + '…';
+  }
+
   function renderLog() {
     const t = totals();
-    logTotalDist.textContent = `${t.dist.toFixed(0)} km`;
-    logTotalTime.textContent = fmtDuration(t.time);
-    logTotalRides.textContent = rides.length.toString();
-    logCount.textContent = rides.length > 0 ? `· ${rides.length}` : '';
+    logKpiDistance.textContent = `${t.dist.toFixed(0)}`;
+    logKpiTime.textContent = fmtDuration(t.time);
+    logKpiRides.textContent = rides.length.toString();
 
     if (rides.length === 0) {
-      logSubtitle.textContent = '';
+      logMonthLabel.textContent = '—';
       logTable.innerHTML = '';
       logEmpty.style.display = 'block';
       return;
     }
     logEmpty.style.display = 'none';
 
-    // Build month/year subtitle from newest ride
+    // Month label from newest ride
     const newest = rides[0];
-    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
     const nd = new Date(newest.startTime);
-    logSubtitle.textContent = `${months[nd.getMonth()]} ${nd.getFullYear()}`;
+    logMonthLabel.textContent = `${MONTHS_LONG[nd.getMonth()]} ${nd.getFullYear()}`;
 
     // Transposed table: rows = field labels, columns = rides (newest first)
+    const gearSvg = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/></svg>';
+
     const rowDefs = [
       { key: 'start', label: 'Start', cls: '' },
       { key: 'end', label: 'End', cls: '' },
@@ -1004,7 +1461,8 @@
       { key: 'odoStart', label: 'Odo Start', cls: 'odo-start' },
       { key: 'time', label: 'Time', cls: 'muted' },
       { key: 'distance', label: 'Distance', cls: 'muted' },
-      { key: 'notes', label: 'Notes', cls: 'notes' }
+      { key: 'notes', label: 'Notes', cls: 'notes' },
+      { key: 'options', label: '', cls: 'options' }
     ];
 
     const trs = rowDefs.map(rowDef => {
@@ -1033,7 +1491,10 @@
             val = fmtKm(ride.distanceKm);
             break;
           case 'notes':
-            val = escapeHtml(ride.notes || '—');
+            val = ride.notes ? escapeHtml(firstWord(ride.notes)) : '—';
+            break;
+          case 'options':
+            val = `<button class="gear-btn" data-ride-id="${ride.id}" aria-label="Ride options">${gearSvg}</button>`;
             break;
         }
         html += `<td class="data-cell ${rowDef.cls}"${extraAttr}>${val}</td>`;
@@ -1049,6 +1510,13 @@
       cell.addEventListener('click', () => {
         const id = cell.getAttribute('data-ride-id');
         openOdoEdit(id);
+      });
+    });
+    // Attach handlers to gear buttons
+    logTable.querySelectorAll('.gear-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-ride-id');
+        openRideOptions(id);
       });
     });
   }
@@ -1118,7 +1586,11 @@
   }
   sheetOdoStart.addEventListener('input', updateSheetCalcs);
   sheetOdoEnd.addEventListener('input', updateSheetCalcs);
-  sheetBackdrop.addEventListener('click', closeEndSheet);
+  sheetBackdrop.addEventListener('click', () => {
+    closeEndSheet();
+    closeRideOptions();
+    closeEditRide();
+  });
   sheetCancel.addEventListener('click', closeEndSheet);
 
   sheetSave.addEventListener('click', async () => {
@@ -1136,15 +1608,19 @@
       sheetOdoStart.focus();
       return;
     }
+    const startTs = activeRide.startTimestamp;
+    const split = dayNightSplit(startTs, endTs);
     const ride = {
-      id: 'r_' + activeRide.startTimestamp + '_' + Math.random().toString(36).slice(2, 7),
-      startTime: activeRide.startTimestamp,
+      id: 'r_' + startTs + '_' + Math.random().toString(36).slice(2, 7),
+      startTime: startTs,
       endTime: endTs,
       odoStart: os,
       odoEnd: oe,
       notes: sheetNotes.value.trim(),
-      timeMinutes: (endTs - activeRide.startTimestamp) / 60000,
-      distanceKm: oe - os
+      timeMinutes: (endTs - startTs) / 60000,
+      distanceKm: oe - os,
+      dayMinutes: split.dayMinutes,
+      nightMinutes: split.nightMinutes
     };
     rides.unshift(ride);
     saveRides();
@@ -1188,6 +1664,192 @@
     showToast('Updated');
   });
 
+  // ---------- RIDE OPTIONS SHEET ----------
+  function openRideOptions(rideId) {
+    optionsRideId = rideId;
+    sheetBackdrop.classList.add('visible');
+    rideOptionsSheet.classList.add('visible');
+  }
+  function closeRideOptions() {
+    rideOptionsSheet.classList.remove('visible');
+    sheetBackdrop.classList.remove('visible');
+    optionsRideId = null;
+  }
+  optEditRide.addEventListener('click', () => {
+    const id = optionsRideId;
+    closeRideOptions();
+    if (id) openEditRide(id);
+  });
+  optCopyRide.addEventListener('click', async () => {
+    const id = optionsRideId;
+    closeRideOptions();
+    if (!id) return;
+    const ride = rides.find(r => r.id === id);
+    if (!ride) return;
+    await copyTextToClipboard(formatRideText(ride));
+    showToast('Copied');
+  });
+  optImportLog.addEventListener('click', () => {
+    closeRideOptions();
+    csvFileInput.click();
+  });
+  optDeleteRide.addEventListener('click', () => {
+    const id = optionsRideId;
+    closeRideOptions();
+    if (!id) return;
+    const idx = rides.findIndex(r => r.id === id);
+    if (idx === -1) return;
+    rides.splice(idx, 1);
+    saveRides();
+    render();
+    showToast('Ride deleted');
+  });
+
+  // ---------- EDIT RIDE SHEET ----------
+  function tsToDatetimeLocal(ts) {
+    const d = new Date(ts);
+    const pad = n => n.toString().padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+  function datetimeLocalToTs(str) {
+    if (!str) return NaN;
+    const m = str.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/);
+    if (!m) return NaN;
+    return new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +(m[6] || 0), 0).getTime();
+  }
+  function openEditRide(rideId) {
+    const ride = rides.find(r => r.id === rideId);
+    if (!ride) return;
+    editingFullRideId = rideId;
+    editRideStart.value = tsToDatetimeLocal(ride.startTime);
+    editRideEnd.value = tsToDatetimeLocal(ride.endTime);
+    editRideOdoStart.value = ride.odoStart != null ? ride.odoStart : '';
+    editRideOdoEnd.value = ride.odoEnd != null ? ride.odoEnd : '';
+    editRideNotes.value = ride.notes || '';
+    updateEditRideCalcs();
+    sheetBackdrop.classList.add('visible');
+    editRideSheet.classList.add('visible');
+  }
+  function closeEditRide() {
+    editRideSheet.classList.remove('visible');
+    sheetBackdrop.classList.remove('visible');
+    editingFullRideId = null;
+  }
+  function updateEditRideCalcs() {
+    const startTs = datetimeLocalToTs(editRideStart.value);
+    const endTs = datetimeLocalToTs(editRideEnd.value);
+    if (isFinite(startTs) && isFinite(endTs) && endTs > startTs) {
+      editRideCalcTime.textContent = fmtDuration((endTs - startTs) / 60000);
+    } else {
+      editRideCalcTime.textContent = '—';
+    }
+    const os = parseFloat(editRideOdoStart.value);
+    const oe = parseFloat(editRideOdoEnd.value);
+    if (isFinite(os) && isFinite(oe)) {
+      editRideCalcDist.textContent = fmtKm(oe - os);
+    } else {
+      editRideCalcDist.textContent = '—';
+    }
+  }
+  editRideStart.addEventListener('input', updateEditRideCalcs);
+  editRideEnd.addEventListener('input', updateEditRideCalcs);
+  editRideOdoStart.addEventListener('input', updateEditRideCalcs);
+  editRideOdoEnd.addEventListener('input', updateEditRideCalcs);
+  editRideCancel.addEventListener('click', closeEditRide);
+  editRideSave.addEventListener('click', () => {
+    if (!editingFullRideId) return;
+    const ride = rides.find(r => r.id === editingFullRideId);
+    if (!ride) return closeEditRide();
+    const startTs = datetimeLocalToTs(editRideStart.value);
+    const endTs = datetimeLocalToTs(editRideEnd.value);
+    const os = parseFloat(editRideOdoStart.value);
+    const oe = parseFloat(editRideOdoEnd.value);
+    if (!isFinite(startTs) || !isFinite(endTs)) { showToast('Invalid date/time'); return; }
+    if (endTs <= startTs) { showToast('End must be after Start'); return; }
+    if (!isFinite(os) || !isFinite(oe)) { showToast('Invalid odo reading'); return; }
+    ride.startTime = startTs;
+    ride.endTime = endTs;
+    ride.odoStart = os;
+    ride.odoEnd = oe;
+    ride.notes = editRideNotes.value.trim();
+    ride.timeMinutes = (endTs - startTs) / 60000;
+    ride.distanceKm = oe - os;
+    const split = dayNightSplit(startTs, endTs);
+    ride.dayMinutes = split.dayMinutes;
+    ride.nightMinutes = split.nightMinutes;
+    // Re-sort in case start time changed enough to reorder
+    rides.sort((a, b) => b.startTime - a.startTime);
+    saveRides();
+    closeEditRide();
+    render();
+    showToast('Ride updated');
+  });
+
+  // ---------- CLIPBOARD HELPERS ----------
+  async function copyTextToClipboard(text) {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    } catch (e) { /* fall through */ }
+    // Fallback for older browsers
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      return ok;
+    } catch (e) {
+      return false;
+    }
+  }
+  function hhmm(ts) {
+    const d = new Date(ts);
+    const pad = n => n.toString().padStart(2, '0');
+    return `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+  function shortDate(ts) {
+    const d = new Date(ts);
+    return `${d.getDate()} ${MONTHS_SHORT[d.getMonth()]} ${d.getFullYear()}`;
+  }
+  function rideLine(ride, label) {
+    const dist = isFinite(ride.distanceKm) ? `${ride.distanceKm.toFixed(1)} km` : '—';
+    const min = isFinite(ride.timeMinutes) ? `${Math.round(ride.timeMinutes)} min` : '—';
+    return `${label}: ${hhmm(ride.startTime)} → ${hhmm(ride.endTime)} · ${dist} · ${min}`;
+  }
+  function formatRideText(ride) {
+    return `RE266733 · ${shortDate(ride.startTime)}\n${rideLine(ride, 'Ride')}`;
+  }
+  function formatTodayText() {
+    const now = new Date();
+    const y = now.getFullYear(), m = now.getMonth(), d = now.getDate();
+    const todayRides = rides.filter(r => {
+      const rd = new Date(r.startTime);
+      return rd.getFullYear() === y && rd.getMonth() === m && rd.getDate() === d;
+    });
+    if (todayRides.length === 0) return 'No rides logged today.';
+    todayRides.sort((a, b) => a.startTime - b.startTime);
+    const lines = [`RE266733 · ${shortDate(now)}`];
+    let totalDist = 0, totalMin = 0;
+    todayRides.forEach((r, i) => {
+      lines.push(rideLine(r, `Ride ${i + 1}`));
+      if (isFinite(r.distanceKm)) totalDist += r.distanceKm;
+      if (isFinite(r.timeMinutes)) totalMin += r.timeMinutes;
+    });
+    lines.push(`Daily total: ${totalDist.toFixed(1)} km · ${fmtDuration(totalMin)}`);
+    return lines.join('\n');
+  }
+  copyTodayBtn.addEventListener('click', async () => {
+    const text = formatTodayText();
+    await copyTextToClipboard(text);
+    showToast('Copied');
+  });
+
   // ---------- CSV EXPORT ----------
   function buildCsv() {
     const header = ['Start', 'End', 'Odo Start', 'Odo End', 'Time (mins)', 'Distance (km)', 'Notes'];
@@ -1221,11 +1883,7 @@
       if (navigator.canShare && navigator.share) {
         const file = new File([blob], fileName, { type: 'text/csv' });
         if (navigator.canShare({ files: [file] })) {
-          await navigator.share({
-            files: [file],
-            title: 'Ride Log',
-            text: 'Ride log export'
-          });
+          await navigator.share({ files: [file] });
           return;
         }
       }
@@ -1293,12 +1951,13 @@
     return new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +(m[6] || 0), 0).getTime();
   }
 
-  // Import a CSV text. Merge-only: skips rides whose startTime already exists.
-  // Returns { added, skipped, invalid, error }.
+  // Import a CSV text. OVERRIDE mode: replaces all ride data in storage
+  // with what's in the file. Computes day/night split for every imported ride.
+  // Returns { loaded, invalid, error }.
   function importCsvText(text) {
     const rows = parseCsv(text);
     if (rows.length < 1) {
-      return { added: 0, skipped: 0, invalid: 0, error: 'Empty file' };
+      return { loaded: 0, invalid: 0, error: 'Empty file' };
     }
     // Detect and skip header row
     let dataStart = 0;
@@ -1307,9 +1966,8 @@
       dataStart = 1;
     }
 
-    const existing = new Set(rides.map(r => r.startTime));
-    const toAdd = [];
-    let added = 0, skipped = 0, invalid = 0;
+    const imported = [];
+    let invalid = 0;
 
     for (let r = dataStart; r < rows.length; r++) {
       const cols = rows[r];
@@ -1325,9 +1983,8 @@
       if (!isFinite(startTs) || !isFinite(endTs) || !isFinite(odoStart) || !isFinite(odoEnd)) {
         invalid++; continue;
       }
-      if (existing.has(startTs)) { skipped++; continue; }
-
-      toAdd.push({
+      const split = dayNightSplit(startTs, endTs);
+      imported.push({
         id: 'imp_' + startTs + '_' + Math.random().toString(36).slice(2, 7),
         startTime: startTs,
         endTime: endTs,
@@ -1335,23 +1992,28 @@
         odoEnd: odoEnd,
         notes: notes,
         timeMinutes: isFinite(timeMin) ? timeMin : (endTs - startTs) / 60000,
-        distanceKm: isFinite(distKm) ? distKm : (odoEnd - odoStart)
+        distanceKm: isFinite(distKm) ? distKm : (odoEnd - odoStart),
+        dayMinutes: split.dayMinutes,
+        nightMinutes: split.nightMinutes
       });
-      existing.add(startTs);
-      added++;
     }
 
-    if (added > 0) {
-      rides.push(...toAdd);
-      rides.sort((a, b) => b.startTime - a.startTime); // newest-first
+    if (imported.length === 0 && invalid === 0) {
+      return { loaded: 0, invalid: 0, error: 'No rides found in file' };
+    }
+
+    if (imported.length > 0) {
+      imported.sort((a, b) => b.startTime - a.startTime); // newest-first
+      // OVERRIDE: replace all existing rides
+      rides.length = 0;
+      rides.push(...imported);
       saveRides();
       // After a successful import, ensure the seed never re-fires
       localStorage.setItem(STORAGE_SEEDED, '1');
     }
-    return { added, skipped, invalid };
+    return { loaded: imported.length, invalid };
   }
 
-  importBtn.addEventListener('click', () => csvFileInput.click());
   csvFileInput.addEventListener('change', async (e) => {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
@@ -1360,15 +2022,12 @@
       const res = importCsvText(text);
       if (res.error) {
         showToast(res.error);
-      } else if (res.added === 0 && res.skipped === 0 && res.invalid === 0) {
-        showToast('No rides found in file');
       } else {
         render();
         const parts = [];
-        if (res.added) parts.push(`${res.added} imported`);
-        if (res.skipped) parts.push(`${res.skipped} already existed`);
+        if (res.loaded) parts.push(`${res.loaded} loaded`);
         if (res.invalid) parts.push(`${res.invalid} invalid`);
-        showToast(parts.join(' · '));
+        showToast(parts.join(' · ') || 'No rides loaded');
       }
     } catch (err) {
       showToast('Could not read file');
@@ -1426,6 +2085,7 @@
 
   // ---------- INIT ----------
   seedRidesIfNeeded();
+  backfillDayNight();
   render();
 
   // ---------- SERVICE WORKER ----------
