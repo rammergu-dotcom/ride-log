@@ -419,13 +419,16 @@
     display: flex;
     background: #1F1D17;
     border-top: 1px solid rgba(245, 242, 235, 0.08);
-    padding-bottom: env(safe-area-inset-bottom);
     flex-shrink: 0;
     min-height: 0;
   }
   .tab-btn {
     flex: 1;
-    padding: 9px 8px;
+    /* Split the iOS safe-area-inset between top and bottom padding so
+       icon+label sits visually centred in the full bar chrome. */
+    padding:
+      calc(10px + env(safe-area-inset-bottom) / 2) 8px
+      calc(10px + env(safe-area-inset-bottom) / 2) 8px;
     background: none;
     border: none;
     color: rgba(245, 242, 235, 0.4);
@@ -439,7 +442,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 3px;
+    gap: 4px;
     line-height: 1;
   }
   .tab-btn.active {
@@ -577,6 +580,15 @@
     text-underline-offset: 4px;
     text-decoration-color: rgba(245, 242, 235, 0.4);
     cursor: pointer;
+  }
+  .log-table .data-cell.night-row {
+    color: rgba(245, 242, 235, 0.45);
+  }
+  .log-table .night-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #BA7517;
   }
   .log-empty {
     padding: 40px 20px;
@@ -1461,9 +1473,12 @@
       { key: 'odoStart', label: 'Odo Start', cls: 'odo-start' },
       { key: 'time', label: 'Time', cls: 'muted' },
       { key: 'distance', label: 'Distance', cls: 'muted' },
+      { key: 'night', label: 'Night', cls: 'night-row' },
       { key: 'notes', label: 'Notes', cls: 'notes' },
       { key: 'options', label: '', cls: 'options' }
     ];
+
+    const moonSvg = '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3h.393a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"/></svg>';
 
     const trs = rowDefs.map(rowDef => {
       let html = `<tr><td class="label-cell">${rowDef.label}</td>`;
@@ -1489,6 +1504,13 @@
             break;
           case 'distance':
             val = fmtKm(ride.distanceKm);
+            break;
+          case 'night':
+            if (isFinite(ride.nightMinutes) && ride.nightMinutes >= 0.5) {
+              val = `<span class="night-cell">${moonSvg}<span>${Math.round(ride.nightMinutes)} min</span></span>`;
+            } else {
+              val = '—';
+            }
             break;
           case 'notes':
             val = ride.notes ? escapeHtml(firstWord(ride.notes)) : '—';
