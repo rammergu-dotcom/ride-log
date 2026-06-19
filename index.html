@@ -114,7 +114,7 @@
     -webkit-overflow-scrolling: touch;
     display: none;
     /* Reserve space so fixed tab bar doesn't cover content */
-    padding-bottom: calc(38px + env(safe-area-inset-bottom));
+    padding-bottom: calc(32px + env(safe-area-inset-bottom));
   }
   .screen.active {
     display: flex;
@@ -127,9 +127,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #2A2820;
-    padding: 16px 20px;
-    min-height: 160px;
+    background: var(--bg);
+    padding: 18px 20px;
+    min-height: 220px;
     overflow: hidden;
   }
   .bike-area img {
@@ -388,17 +388,16 @@
     color: #F09595;
   }
 
-  /* ACTION BUTTON ROW (Start/End + Quick Log — equal width) */
-  .action-container {
+  /* BUTTON ROW (Start / End ride) */
+  .button-row {
     display: flex;
-    gap: 12px;
-    margin: 16px 0 12px 0;
-    padding: 0 16px;
+    gap: 10px;
+    padding: 14px 16px;
     flex-shrink: 0;
   }
   .btn {
     flex: 1;
-    height: 56px;
+    height: 60px;
     padding: 0 12px;
     font-family: "Helvetica Neue", -apple-system, Helvetica, sans-serif;
     font-size: 14px;
@@ -408,42 +407,42 @@
     border: none;
     border-radius: 14px;
     cursor: pointer;
-    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                opacity 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
   }
-  .btn-ride-toggle {
+  .btn-start {
     background: var(--cream);
     color: var(--bg);
-    border: 1px solid var(--cream);
   }
-  .btn-ride-toggle:active { background: #d6d2c4; }
-  .btn-ride-toggle.riding {
-    background: var(--olive);
-    color: var(--cream);
-    border-color: var(--cream);
-  }
-  .btn-quick-log {
-    background: rgba(234, 230, 218, 0.07);
-    color: var(--cream);
-    border: 1px solid var(--border-soft);
-  }
-  .btn-quick-log:active { background: rgba(234, 230, 218, 0.14); }
-  .btn-quick-log.disabled {
-    opacity: 0.3;
+  .btn-start:active { background: #d6d2c4; }
+  .btn-start.disabled {
+    opacity: 0.35;
     pointer-events: none;
   }
+  .btn-end {
+    background: rgba(234, 230, 218, 0.07);
+    color: rgba(234, 230, 218, 0.25);
+    border: 1px solid var(--border-soft);
+    pointer-events: none;
+  }
+  .btn-end.active {
+    background: #7a4a2a;
+    color: var(--cream);
+    border-color: transparent;
+    pointer-events: auto;
+  }
+  .btn-end.active:active { background: #6a3e22; }
 
-  /* FIXED TAB BAR (Home / Log only) */
+  /* FIXED TAB BAR (Home / Log) — bg matches screen so safe-area blends */
   .tab-bar {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: var(--bg-2);
-    border-top: 1px solid var(--border-soft);
+    background-color: var(--bg);
+    border-top: 1px solid rgba(234, 230, 218, 0.06);
     display: flex;
+    align-items: flex-end;
+    padding-bottom: env(safe-area-inset-bottom);
     z-index: 9999;
   }
   .tab-item {
@@ -455,129 +454,15 @@
     color: var(--cream-dim);
     cursor: pointer;
     text-align: center;
-    /* Split the iOS safe-area between top and bottom so the label sits
-       visually centred in the full bar chrome. */
-    padding:
-      calc(10px + env(safe-area-inset-bottom) / 2) 16px
-      calc(10px + env(safe-area-inset-bottom) / 2) 16px;
+    /* Bottom-aligned: small top pad, small bottom pad so label sits at
+       the bottom edge of the visible chrome (above the safe-area). */
+    padding: 14px 16px 10px 16px;
     line-height: 1;
   }
   .tab-item.active { color: var(--cream); }
   .tab-item:active { background: rgba(234, 230, 218, 0.03); }
 
-  /* HOME — JOURNEY & LOGBOOK CARD (single-arc gauge) */
-  .gauge-card {
-    margin: 14px 16px 12px 16px;
-    padding: 14px 14px 16px 14px;
-    background: var(--surface-card);
-    border-radius: 14px;
-    border: 1px solid var(--border-soft);
-    flex-shrink: 0;
-  }
-  .gauge-card h2 {
-    margin: 0 0 10px 0;
-    font-size: 13px;
-    color: var(--cream);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    font-weight: 700;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border-soft);
-  }
-  .gauge-container {
-    display: grid;
-    grid-template-columns: minmax(56px, auto) 1fr minmax(56px, auto);
-    align-items: center;
-    column-gap: 8px;
-    height: 180px;
-  }
-  .gauge-side {
-    display: flex;
-    flex-direction: column;
-    line-height: 1;
-  }
-  .gauge-side-left { align-items: flex-start; }
-  .gauge-side-right { align-items: flex-end; }
-  .gauge-side-row {
-    display: flex;
-    align-items: baseline;
-    gap: 3px;
-  }
-  .gauge-side-num {
-    font-size: 22px;
-    font-weight: 300;
-    color: var(--cream);
-  }
-  .gauge-side-unit {
-    font-size: 11px;
-    color: var(--cream-dim);
-  }
-  .gauge-side-sub {
-    font-size: 10px;
-    color: var(--cream-dim);
-    margin-top: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .gauge-arc-wrap {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-  }
-  .gauge-svg {
-    width: 180px;
-    height: 180px;
-    max-width: 100%;
-  }
-  #progress-total,
-  #progress-night {
-    transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .gauge-center-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -35%);
-    text-align: center;
-  }
-  .gauge-center-text .title {
-    font-size: 10px;
-    color: var(--cream-muted);
-    letter-spacing: 0.04em;
-  }
-  .gauge-center-text .val {
-    font-size: 28px;
-    font-weight: 300;
-    color: var(--cream);
-    line-height: 1.05;
-    margin-top: 2px;
-  }
-  .gauge-center-text .target {
-    font-size: 11px;
-    color: var(--cream-dim);
-    margin-top: 1px;
-  }
-  .gauge-labels {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding-top: 4px;
-  }
-  .gauge-labels .label-group {
-    flex: 1;
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--cream);
-  }
-  .gauge-labels .label-group small {
-    font-size: 10px;
-    color: var(--cream-dim);
-    font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
+  /* (Gauge card removed — Home is back to KPI strip + linear progress bars) */
 
   /* LOG — TIMELINE & JOURNEY CARDS */
   .timeline-wrap {
@@ -806,6 +691,32 @@
     color: var(--cream-dim);
     font-size: 13px;
   }
+
+  /* Log tab action row (Quick Log + Copy today) */
+  .log-action-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 10px 16px 0 16px;
+    flex-shrink: 0;
+  }
+  .log-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(234, 230, 218, 0.06);
+    border: 1px solid var(--border-soft);
+    color: var(--cream);
+    padding: 7px 12px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .log-action-btn:active { background: rgba(234, 230, 218, 0.12); }
 
   /* LOG TAB */
   .log-header {
@@ -1160,34 +1071,49 @@
 
   <!-- HOME SCREEN -->
   <div id="homeScreen" class="screen active">
-    <div class="gauge-card">
-      <h2>Journey &amp; Logbook</h2>
-      <div class="gauge-container">
-        <div class="gauge-side gauge-side-left">
-          <div class="gauge-side-row"><span class="gauge-side-num" id="kpi-dist">0</span><span class="gauge-side-unit">km</span></div>
-          <div class="gauge-side-sub" id="kpi-rides">0 rides</div>
-        </div>
-        <div class="gauge-arc-wrap">
-          <svg class="gauge-svg" viewBox="0 0 100 100">
-            <path d="M 20 80 A 40 40 0 1 1 80 80" fill="none" stroke="var(--track)" stroke-width="8" stroke-linecap="round"/>
-            <path id="progress-total" d="M 20 80 A 40 40 0 1 1 80 80" fill="none" stroke="var(--total-fill)" stroke-width="8" stroke-linecap="round" stroke-dasharray="188.5" stroke-dashoffset="188.5"/>
-            <path id="progress-night" d="M 28 75 A 32 32 0 1 1 72 75" fill="none" stroke="var(--accent-gold)" stroke-width="5" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="150.8"/>
-          </svg>
-          <div class="gauge-center-text">
-            <div class="title">Total Logbook Time</div>
-            <div class="val" id="dash-time">0h 0m</div>
-            <div class="target" id="dash-hours-target">/ 120h</div>
+    <div class="kpi-strip">
+      <div class="kpi-card">
+        <div class="kpi-label">Total Dist</div>
+        <div class="kpi-value"><span id="kpiDistance">0</span><span class="kpi-unit">km</span></div>
+        <div class="kpi-sub" id="kpiDistanceSub">0 rides</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Total Time</div>
+        <div class="kpi-value" id="kpiTime">0h 0m</div>
+        <div class="kpi-sub" id="kpiTimeSub"></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Last Odo</div>
+        <div class="kpi-value"><span id="kpiOdo">—</span><span class="kpi-unit" id="kpiOdoUnit"></span></div>
+        <div class="kpi-sub">last reading</div>
+      </div>
+    </div>
+
+    <div class="logbook-progress">
+      <div class="logbook-progress-header">
+        <div class="logbook-progress-label">Logbook Progress</div>
+        <div class="logbook-progress-overall"><span id="progressOverallPct">0</span>% overall</div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-row-labels">
+          <div class="progress-row-left">Total hours</div>
+          <div class="progress-row-right">
+            <span class="pr-hours" id="progressTotalHours">0.0h</span><span class="pr-target"> / 120h</span><span class="pr-pct"> · <span id="progressTotalPct">0</span>%</span>
           </div>
         </div>
-        <div class="gauge-side gauge-side-right">
-          <div class="gauge-side-row"><span class="gauge-side-num" id="kpi-odo">—</span><span class="gauge-side-unit" id="kpi-odo-unit"></span></div>
-          <div class="gauge-side-sub">last ODO</div>
-        </div>
+        <div class="progress-bar"><div class="progress-bar-fill total" id="progressTotalFill" style="width:0%"></div></div>
       </div>
-      <div class="gauge-labels">
-        <div class="label-group"><span id="lbl-overall-pct">0%</span><br><small>total</small></div>
-        <div class="label-group" style="text-align: center;"><span style="color: var(--accent-gold);">Night Hour</span><br><small id="lbl-night-hours">0.0h / 20h</small></div>
-        <div class="label-group" style="text-align: right;"><span id="lbl-night-pct">0%</span><br><small>night</small></div>
+      <div class="progress-row">
+        <div class="progress-row-labels">
+          <div class="progress-row-left">
+            <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3h.393a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"/></svg>
+            <span>Night hours</span>
+          </div>
+          <div class="progress-row-right">
+            <span class="pr-hours" id="progressNightHours">0.0h</span><span class="pr-target"> / 20h</span><span class="pr-pct"> · <span id="progressNightPct">0</span>%</span>
+          </div>
+        </div>
+        <div class="progress-bar"><div class="progress-bar-fill night" id="progressNightFill" style="width:0%"></div></div>
       </div>
     </div>
 
@@ -1195,9 +1121,9 @@
       <img src="bike.png" alt="Royal Enfield" onerror="this.style.display='none'">
     </div>
 
-    <div class="action-container">
-      <button id="btn-ride-toggle" class="btn btn-ride-toggle">Start Ride</button>
-      <button id="btn-quick-log" class="btn btn-quick-log">Quick Log</button>
+    <div class="button-row">
+      <button class="btn btn-start" id="startBtn">Start Ride</button>
+      <button class="btn btn-end" id="endBtn">End Ride</button>
     </div>
   </div>
 
@@ -1221,6 +1147,16 @@
       </div>
     </div>
     <input type="file" id="csvFileInput" accept=".csv,text/csv,text/plain" style="display:none;">
+    <div class="log-action-row">
+      <button class="log-action-btn" id="logQuickLogBtn">
+        <svg class="icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        <span>Quick Log</span>
+      </button>
+      <button class="log-action-btn" id="logCopyTodayBtn">
+        <svg class="icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z"/><path d="M4.012 16.737a2 2 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"/></svg>
+        <span>Copy today</span>
+      </button>
+    </div>
     <div class="timeline-wrap" id="timelineWrap">
       <div class="timeline-rail" id="timelineRail"></div>
       <div id="timelineContent"></div>
@@ -1434,22 +1370,28 @@
 
   // ---------- ELEMENTS ----------
   const $ = id => document.getElementById(id);
-  const rideToggleBtn = $('btn-ride-toggle');
-  const quickLogActionBtn = $('btn-quick-log');
+  const startBtn = $('startBtn');
+  const endBtn = $('endBtn');
   const activeBanner = $('activeBanner');
   const activeTimer = $('activeTimer');
   const activeSubstrip = $('activeSubstrip');
-  // Home gauge elements (single-arc design with KPI bookends)
-  const kpiDist = $('kpi-dist');
-  const kpiRides = $('kpi-rides');
-  const kpiOdo = $('kpi-odo');
-  const kpiOdoUnit = $('kpi-odo-unit');
-  const dashTime = $('dash-time');
-  const lblOverallPct = $('lbl-overall-pct');
-  const lblNightHours = $('lbl-night-hours');
-  const lblNightPct = $('lbl-night-pct');
-  const progressTotal = $('progress-total');
-  const progressNight = $('progress-night');
+  // Home KPI strip + linear progress bars
+  const kpiDistance = $('kpiDistance');
+  const kpiDistanceSub = $('kpiDistanceSub');
+  const kpiTime = $('kpiTime');
+  const kpiTimeSub = $('kpiTimeSub');
+  const kpiOdo = $('kpiOdo');
+  const kpiOdoUnit = $('kpiOdoUnit');
+  const progressOverallPct = $('progressOverallPct');
+  const progressTotalHours = $('progressTotalHours');
+  const progressTotalPct = $('progressTotalPct');
+  const progressTotalFill = $('progressTotalFill');
+  const progressNightHours = $('progressNightHours');
+  const progressNightPct = $('progressNightPct');
+  const progressNightFill = $('progressNightFill');
+  // Log tab buttons
+  const logQuickLogBtn = $('logQuickLogBtn');
+  const logCopyTodayBtn = $('logCopyTodayBtn');
   const sheetBackdrop = $('sheetBackdrop');
   const endSheet = $('endSheet');
   const sheetEndTime = $('sheetEndTime');
@@ -1746,25 +1688,15 @@
     return { dist, time, dayMin, nightMin };
   }
 
-  // 270° arc path lengths used by the gauge SVG.
-  // Outer arc: r=40, sweep=3π/2  → 40 · 3π/2 = 60π ≈ 188.495
-  // Inner arc: r=32, sweep=3π/2  → 32 · 3π/2 = 48π ≈ 150.796
-  const TOTAL_ARC_LENGTH = 188.5;
-  const NIGHT_ARC_LENGTH = 150.8;
-
-  function updateGaugeArcs(totalPct, nightPct) {
-    const totalOffset = TOTAL_ARC_LENGTH - (Math.max(0, Math.min(100, totalPct)) / 100) * TOTAL_ARC_LENGTH;
-    const nightOffset = NIGHT_ARC_LENGTH - (Math.max(0, Math.min(100, nightPct)) / 100) * NIGHT_ARC_LENGTH;
-    progressTotal.style.strokeDashoffset = totalOffset;
-    progressNight.style.strokeDashoffset = nightOffset;
-  }
-
   function renderHome() {
     const t = totals();
 
-    // KPI bookends
-    kpiDist.textContent = t.dist.toFixed(0);
-    kpiRides.textContent = `${rides.length} ride${rides.length === 1 ? '' : 's'}`;
+    // KPI strip
+    kpiDistance.textContent = t.dist.toFixed(0);
+    kpiDistanceSub.textContent = `${rides.length} ride${rides.length === 1 ? '' : 's'}`;
+    kpiTime.textContent = fmtDuration(t.time);
+    const now = new Date();
+    kpiTimeSub.textContent = `${MONTHS_SHORT[now.getMonth()]} ${now.getFullYear()}`;
     const lo = lastOdo();
     if (lo != null) {
       kpiOdo.textContent = lo.toFixed(0);
@@ -1779,22 +1711,18 @@
     const nightHours = t.nightMin / 60;
     const totalPct = Math.min(100, Math.round(totalHours / TARGET_TOTAL_HOURS * 100));
     const nightPct = Math.min(100, Math.round(nightHours / TARGET_NIGHT_HOURS * 100));
-
-    // Center of gauge
-    dashTime.textContent = fmtDuration(t.time);
-
-    // Bottom label row: left mirrors outer arc (total), right mirrors inner (night)
-    lblOverallPct.textContent = `${totalPct}%`;
-    lblNightHours.textContent = `${nightHours.toFixed(1)}h / 20h`;
-    lblNightPct.textContent = `${nightPct}%`;
-
-    // Drive arc fills via stroke-dashoffset
-    updateGaugeArcs(totalPct, nightPct);
+    const overallPct = Math.min(totalPct, nightPct);
+    progressOverallPct.textContent = overallPct;
+    progressTotalHours.textContent = `${totalHours.toFixed(1)}h`;
+    progressTotalPct.textContent = totalPct;
+    progressTotalFill.style.width = totalPct + '%';
+    progressNightHours.textContent = `${nightHours.toFixed(1)}h`;
+    progressNightPct.textContent = nightPct;
+    progressNightFill.style.width = nightPct + '%';
 
     if (activeRide) {
-      rideToggleBtn.textContent = 'End Ride';
-      rideToggleBtn.classList.add('riding');
-      quickLogActionBtn.classList.add('disabled');
+      startBtn.classList.add('disabled');
+      endBtn.classList.add('active');
       activeBanner.classList.add('visible');
       activeSubstrip.classList.add('visible');
       activeSubstrip.textContent =
@@ -1802,9 +1730,8 @@
       tickActiveTimer();
       startActiveTicker();
     } else {
-      rideToggleBtn.textContent = 'Start Ride';
-      rideToggleBtn.classList.remove('riding');
-      quickLogActionBtn.classList.remove('disabled');
+      startBtn.classList.remove('disabled');
+      endBtn.classList.remove('active');
       activeBanner.classList.remove('visible');
       activeSubstrip.classList.remove('visible');
       stopActiveTicker();
@@ -2109,14 +2036,9 @@
     renderLog();
   }
 
-  // ---------- RIDE TOGGLE (single Start/End button) ----------
-  function handleRideToggle() {
-    if (activeRide) {
-      // Ride in progress → open End Ride sheet
-      openEndSheet();
-      return;
-    }
-    // No ride in progress → start one
+  // ---------- START / END RIDE ----------
+  startBtn.addEventListener('click', () => {
+    if (activeRide) return;
     const now = Date.now();
     const lo = lastOdo();
     activeRide = {
@@ -2125,8 +2047,11 @@
     };
     saveActive();
     renderHome();
-  }
-  rideToggleBtn.addEventListener('click', handleRideToggle);
+  });
+  endBtn.addEventListener('click', () => {
+    if (!activeRide) return;
+    openEndSheet();
+  });
 
   // ---------- END RIDE SHEET ----------
   function openEndSheet() {
@@ -2463,10 +2388,12 @@
   quickOdoStart.addEventListener('input', updateQuickCalcs);
   quickOdoEnd.addEventListener('input', updateQuickCalcs);
   quickCancel.addEventListener('click', closeQuickLog);
-  // Single entry point to Quick Log: the secondary action button on Home.
-  quickLogActionBtn.addEventListener('click', () => {
-    if (quickLogActionBtn.classList.contains('disabled')) return;
-    openQuickLog();
+  // Quick Log + Copy today live on the Log tab header now.
+  logQuickLogBtn.addEventListener('click', openQuickLog);
+  logCopyTodayBtn.addEventListener('click', async () => {
+    const text = formatTodayText();
+    await copyTextToClipboard(text);
+    showToast('Copied');
   });
   quickSave.addEventListener('click', () => {
     const startTs = datetimeLocalToTs(quickStart.value);
