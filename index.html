@@ -388,15 +388,38 @@
     color: #F09595;
   }
 
-  /* BUTTON ROW (Start / End ride) */
-  .button-row {
+  /* ROUND RIDE TOGGLE BUTTON (Start ↔ End) */
+  .ride-button-wrap {
     display: flex;
-    gap: 10px;
-    padding: 14px 16px;
+    justify-content: center;
+    padding: 14px 0 18px 0;
     flex-shrink: 0;
   }
+  .ride-button {
+    width: 108px;
+    height: 108px;
+    border-radius: 50%;
+    border: none;
+    background: var(--cream);
+    color: var(--bg);
+    font-family: "Helvetica Neue", -apple-system, Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.15;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+    transition: background-color 0.25s ease, color 0.25s ease, transform 0.1s ease;
+  }
+  .ride-button:active { transform: scale(0.97); }
+  .ride-button.riding {
+    background: #D89A2E;
+    color: var(--bg);
+  }
+  .ride-button-label { display: inline-block; }
+  /* Keep the old .btn class so the sheet save/cancel buttons still work */
   .btn {
-    flex: 1;
     height: 60px;
     padding: 0 12px;
     font-family: "Helvetica Neue", -apple-system, Helvetica, sans-serif;
@@ -409,58 +432,30 @@
     cursor: pointer;
     transition: background-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
   }
-  .btn-start {
-    background: var(--cream);
-    color: var(--bg);
-  }
-  .btn-start:active { background: #d6d2c4; }
-  .btn-start.disabled {
-    opacity: 0.35;
-    pointer-events: none;
-  }
-  .btn-end {
-    background: rgba(234, 230, 218, 0.07);
-    color: rgba(234, 230, 218, 0.25);
-    border: 1px solid var(--border-soft);
-    pointer-events: none;
-  }
-  .btn-end.active {
-    background: #7a4a2a;
-    color: var(--cream);
-    border-color: transparent;
-    pointer-events: auto;
-  }
-  .btn-end.active:active { background: #6a3e22; }
 
-  /* TAB BAR — IN-FLOW (last flex child of .app)
-     Previously position: fixed which (per user feedback) was rendering
-     above the actual viewport bottom on installed PWA. Making the bar
-     a regular flex item of .app guarantees it sits at the bottom of
-     the .app container, which IS the viewport bottom (100dvh). No
-     fixed-position quirks, no env(safe-area-inset-bottom) consumption,
-     no .screen padding-bottom workaround. */
+  /* PAGE-DOT NAV — last flex child of .app (in-flow, sits at viewport bottom) */
   .tab-bar {
     flex-shrink: 0;
     display: flex;
     align-items: center;
+    justify-content: center;
+    gap: 10px;
     background-color: var(--bg);
-    border-top: 1px solid rgba(234, 230, 218, 0.06);
+    padding: 10px 16px 12px 16px;
   }
-  .tab-item {
-    flex: 1;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--cream-dim);
+  .page-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(234, 230, 218, 0.25);
     cursor: pointer;
-    text-align: center;
-    /* Equal top/bottom padding → label is visually centred in the bar. */
-    padding: 9px 16px;
-    line-height: 1;
+    transition: background 0.2s ease, transform 0.2s ease;
   }
-  .tab-item.active { color: var(--cream); }
-  .tab-item:active { background: rgba(234, 230, 218, 0.03); }
+  .page-dot.active {
+    background: var(--cream);
+    transform: scale(1.15);
+  }
+  /* (.tab-item styles removed — page dots are now the tab nav) */
 
   /* (Gauge card removed — Home is back to KPI strip + linear progress bars) */
 
@@ -950,17 +945,33 @@
   }
   .btn-cancel {
     flex: 1;
-    padding: 16px;
+    padding: 16px 8px;
     background: transparent;
     color: rgba(245, 242, 235, 0.6);
     border: 1px solid rgba(245, 242, 235, 0.2);
     font-family: inherit;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
     text-transform: uppercase;
     cursor: pointer;
+    border-radius: 8px;
   }
+  .btn-discard {
+    flex: 1;
+    padding: 16px 8px;
+    background: transparent;
+    color: var(--danger);
+    border: 1px solid rgba(240, 149, 149, 0.35);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 8px;
+  }
+  .btn-discard:active { background: rgba(240, 149, 149, 0.08); }
   .btn-save {
     flex: 2;
     padding: 16px;
@@ -973,6 +984,7 @@
     letter-spacing: 1.5px;
     text-transform: uppercase;
     cursor: pointer;
+    border-radius: 8px;
   }
   .btn-save:active {
     background: #C28A24;
@@ -1121,9 +1133,10 @@
       <img src="bike.png" alt="Royal Enfield" onerror="this.style.display='none'">
     </div>
 
-    <div class="button-row">
-      <button class="btn btn-start" id="startBtn">Start Ride</button>
-      <button class="btn btn-end" id="endBtn">End Ride</button>
+    <div class="ride-button-wrap">
+      <button class="ride-button" id="rideToggleBtn" aria-label="Start ride">
+        <span class="ride-button-label" id="rideToggleLabel">Start<br>Ride</span>
+      </button>
     </div>
   </div>
 
@@ -1164,10 +1177,10 @@
     </div>
   </div>
 
-  <!-- FIXED TAB BAR (Home / Log only — FAB removed) -->
-  <nav class="tab-bar">
-    <div class="tab-item active" data-tab="home">Home</div>
-    <div class="tab-item" data-tab="log">Log</div>
+  <!-- PAGE DOTS (swipe left/right to switch) -->
+  <nav class="tab-bar" aria-label="Page navigation">
+    <div class="page-dot active" data-tab="home" role="button" aria-label="Home"></div>
+    <div class="page-dot" data-tab="log" role="button" aria-label="Log"></div>
   </nav>
 </div>
 
@@ -1208,8 +1221,9 @@
   </div>
 
   <div class="sheet-buttons">
-    <button class="btn-cancel" id="sheetCancel">Cancel</button>
-    <button class="btn-save" id="sheetSave">Save Ride</button>
+    <button class="btn-cancel" id="sheetCancel" style="flex:1;">Cancel</button>
+    <button class="btn-discard" id="sheetDiscard">Discard</button>
+    <button class="btn-save" id="sheetSave">Save</button>
   </div>
 </div>
 
@@ -1370,8 +1384,9 @@
 
   // ---------- ELEMENTS ----------
   const $ = id => document.getElementById(id);
-  const startBtn = $('startBtn');
-  const endBtn = $('endBtn');
+  const rideToggleBtn = $('rideToggleBtn');
+  const rideToggleLabel = $('rideToggleLabel');
+  const sheetDiscard = $('sheetDiscard');
   const activeBanner = $('activeBanner');
   const activeTimer = $('activeTimer');
   const activeSubstrip = $('activeSubstrip');
@@ -1721,8 +1736,9 @@
     progressNightFill.style.width = nightPct + '%';
 
     if (activeRide) {
-      startBtn.classList.add('disabled');
-      endBtn.classList.add('active');
+      rideToggleBtn.classList.add('riding');
+      rideToggleBtn.setAttribute('aria-label', 'End ride');
+      rideToggleLabel.innerHTML = 'End<br>Ride';
       activeBanner.classList.add('visible');
       activeSubstrip.classList.add('visible');
       activeSubstrip.textContent =
@@ -1730,8 +1746,9 @@
       tickActiveTimer();
       startActiveTicker();
     } else {
-      startBtn.classList.remove('disabled');
-      endBtn.classList.remove('active');
+      rideToggleBtn.classList.remove('riding');
+      rideToggleBtn.setAttribute('aria-label', 'Start ride');
+      rideToggleLabel.innerHTML = 'Start<br>Ride';
       activeBanner.classList.remove('visible');
       activeSubstrip.classList.remove('visible');
       stopActiveTicker();
@@ -2036,9 +2053,14 @@
     renderLog();
   }
 
-  // ---------- START / END RIDE ----------
-  startBtn.addEventListener('click', () => {
-    if (activeRide) return;
+  // ---------- RIDE TOGGLE (single round button) ----------
+  rideToggleBtn.addEventListener('click', () => {
+    if (activeRide) {
+      // End ride → open sheet for odo entry (or Discard)
+      openEndSheet();
+      return;
+    }
+    // Start ride
     const now = Date.now();
     const lo = lastOdo();
     activeRide = {
@@ -2048,9 +2070,17 @@
     saveActive();
     renderHome();
   });
-  endBtn.addEventListener('click', () => {
+
+  // Discard active ride entirely (with confirmation). No odo entry needed.
+  sheetDiscard.addEventListener('click', () => {
     if (!activeRide) return;
-    openEndSheet();
+    const ok = window.confirm('Discard this ride? It will not be saved to the log.');
+    if (!ok) return;
+    activeRide = null;
+    saveActive();
+    closeEndSheet();
+    render();
+    showToast('Ride discarded');
   });
 
   // ---------- END RIDE SHEET ----------
@@ -2323,13 +2353,23 @@
     const d = new Date(ts);
     return `${d.getDate()} ${MONTHS_SHORT[d.getMonth()]} ${d.getFullYear()}`;
   }
+  // Single-line ride summary including odometer readings.
+  // Format: "My Ride · 21 Jun 2026 · Ride: 09:28 → 09:43 · Odo: 610 → 615 · 5 km · 15 min"
+  function odoRange(ride) {
+    if (!isFinite(ride.odoStart) || !isFinite(ride.odoEnd)) return null;
+    return `Odo: ${ride.odoStart.toFixed(0)} → ${ride.odoEnd.toFixed(0)}`;
+  }
   function rideLine(ride, label) {
-    const dist = isFinite(ride.distanceKm) ? `${ride.distanceKm.toFixed(1)} km` : '—';
-    const min = isFinite(ride.timeMinutes) ? `${Math.round(ride.timeMinutes)} min` : '—';
-    return `${label}: ${hhmm(ride.startTime)} → ${hhmm(ride.endTime)} · ${dist} · ${min}`;
+    const parts = [];
+    parts.push(`${label}: ${hhmm(ride.startTime)} → ${hhmm(ride.endTime)}`);
+    const odo = odoRange(ride);
+    if (odo) parts.push(odo);
+    if (isFinite(ride.distanceKm)) parts.push(`${ride.distanceKm.toFixed(1)} km`);
+    if (isFinite(ride.timeMinutes)) parts.push(`${Math.round(ride.timeMinutes)} min`);
+    return parts.join(' · ');
   }
   function formatRideText(ride) {
-    return `RE266733 · ${shortDate(ride.startTime)}\n${rideLine(ride, 'Ride')}`;
+    return `My Ride · ${shortDate(ride.startTime)} · ${rideLine(ride, 'Ride')}`;
   }
   function formatTodayText() {
     const now = new Date();
@@ -2340,10 +2380,11 @@
     });
     if (todayRides.length === 0) return 'No rides logged today.';
     todayRides.sort((a, b) => a.startTime - b.startTime);
-    const lines = [`RE266733 · ${shortDate(now)}`];
+    const dateStr = shortDate(now);
+    const lines = [];
     let totalDist = 0, totalMin = 0;
     todayRides.forEach((r, i) => {
-      lines.push(rideLine(r, `Ride ${i + 1}`));
+      lines.push(`My Ride · ${dateStr} · ${rideLine(r, `Ride ${i + 1}`)}`);
       if (isFinite(r.distanceKm)) totalDist += r.distanceKm;
       if (isFinite(r.timeMinutes)) totalMin += r.timeMinutes;
     });
@@ -2612,19 +2653,55 @@
     }
   });
 
-  // ---------- TABS ----------
+  // ---------- PAGE DOTS + SWIPE NAVIGATION ----------
+  const TABS = ['home', 'log'];
+  function currentTab() {
+    const active = document.querySelector('.page-dot.active');
+    return active ? active.dataset.tab : 'home';
+  }
   function switchTab(tab) {
-    document.querySelectorAll('.tab-item').forEach(b => {
-      b.classList.toggle('active', b.dataset.tab === tab);
+    if (!TABS.includes(tab)) return;
+    document.querySelectorAll('.page-dot').forEach(d => {
+      d.classList.toggle('active', d.dataset.tab === tab);
     });
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     const target = $(tab + 'Screen');
     if (target) target.classList.add('active');
     if (tab === 'log') renderLog();
   }
-  document.querySelectorAll('.tab-item').forEach(item => {
-    item.addEventListener('click', () => switchTab(item.dataset.tab));
+  document.querySelectorAll('.page-dot').forEach(dot => {
+    dot.addEventListener('click', () => switchTab(dot.dataset.tab));
   });
+
+  // Horizontal swipe across the active screen to switch tabs.
+  // Skip when a sheet is open, when the swipe is mostly vertical, or when
+  // the user starts near a screen edge (avoids iOS back-gesture conflict).
+  let swipeX = null, swipeY = null;
+  document.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) { swipeX = null; return; }
+    // Bail if any sheet or overlay is open
+    if (document.querySelector('.sheet.visible, .sheet-backdrop.visible, .edit-overlay.visible')) {
+      swipeX = null; return;
+    }
+    const t = e.touches[0];
+    // Ignore edge swipes (iOS back gesture / system swipes)
+    if (t.clientX < 20 || t.clientX > window.innerWidth - 20) { swipeX = null; return; }
+    swipeX = t.clientX;
+    swipeY = t.clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', (e) => {
+    if (swipeX === null) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - swipeX;
+    const dy = t.clientY - swipeY;
+    swipeX = swipeY = null;
+    // Threshold + dominant horizontal motion
+    if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    const cur = currentTab();
+    if (dx < 0 && cur === 'home') switchTab('log');
+    else if (dx > 0 && cur === 'log') switchTab('home');
+  }, { passive: true });
 
   // ---------- VISIBILITY / RESUME ----------
   document.addEventListener('visibilitychange', () => {
