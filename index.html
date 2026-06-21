@@ -113,9 +113,9 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     display: none;
-    /* Reserve space so fixed tab bar doesn't cover content.
-       Must match (tab content height + SAI). Tab content = 25px. */
-    padding-bottom: calc(25px + env(safe-area-inset-bottom, 0px));
+    /* Reserve exactly the tab bar's height — 9px + 13px + 9px = 31px.
+       Tab bar no longer consumes env(safe-area-inset-bottom). */
+    padding-bottom: 31px;
   }
   .screen.active {
     display: flex;
@@ -433,10 +433,14 @@
   }
   .btn-end.active:active { background: #6a3e22; }
 
-  /* FIXED TAB BAR (Home / Log) — bg matches screen so safe-area blends.
-     Total bar height = .tab-item padding (12) + label (13) + SAI (34 on
-     Face-ID) ≈ 59px. The only bottom-edge reservation is the SAI; no
-     extra fixed padding, no min-height, no spacer below the bar. */
+  /* FIXED TAB BAR (Home / Log).
+     Deliberately does NOT reserve env(safe-area-inset-bottom) so the bar
+     is just (padding + label) tall — ~31px instead of ~59px. Labels are
+     vertically centred via align-items: center plus equal top/bottom
+     padding on the tab item itself.
+     Trade-off: the label area overlaps the iOS home-indicator gesture
+     zone. Quick taps still register as button taps; only sustained
+     upward swipes from a label could trigger the home gesture. */
   .tab-bar {
     position: fixed;
     bottom: 0;
@@ -445,8 +449,7 @@
     background-color: var(--bg);
     border-top: 1px solid rgba(234, 230, 218, 0.06);
     display: flex;
-    align-items: flex-end;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    align-items: center;
     z-index: 9999;
   }
   .tab-item {
@@ -458,8 +461,8 @@
     color: var(--cream-dim);
     cursor: pointer;
     text-align: center;
-    /* 6px breathing room each side — within the spec's 4–6px cap. */
-    padding: 6px 16px;
+    /* Equal top/bottom padding → label is visually centred in the bar. */
+    padding: 9px 16px;
     line-height: 1;
   }
   .tab-item.active { color: var(--cream); }
