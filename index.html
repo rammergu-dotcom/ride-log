@@ -113,9 +113,8 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     display: none;
-    /* Reserve exactly the tab bar's height — 9px + 13px + 9px = 31px.
-       Tab bar no longer consumes env(safe-area-inset-bottom). */
-    padding-bottom: 31px;
+    /* Tab bar is now in flex flow (no longer position: fixed) so the
+       screen doesn't need to reserve space below for it. */
   }
   .screen.active {
     display: flex;
@@ -433,24 +432,19 @@
   }
   .btn-end.active:active { background: #6a3e22; }
 
-  /* FIXED TAB BAR (Home / Log).
-     Deliberately does NOT reserve env(safe-area-inset-bottom) so the bar
-     is just (padding + label) tall — ~31px instead of ~59px. Labels are
-     vertically centred via align-items: center plus equal top/bottom
-     padding on the tab item itself.
-     Trade-off: the label area overlaps the iOS home-indicator gesture
-     zone. Quick taps still register as button taps; only sustained
-     upward swipes from a label could trigger the home gesture. */
+  /* TAB BAR — IN-FLOW (last flex child of .app)
+     Previously position: fixed which (per user feedback) was rendering
+     above the actual viewport bottom on installed PWA. Making the bar
+     a regular flex item of .app guarantees it sits at the bottom of
+     the .app container, which IS the viewport bottom (100dvh). No
+     fixed-position quirks, no env(safe-area-inset-bottom) consumption,
+     no .screen padding-bottom workaround. */
   .tab-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: var(--bg);
-    border-top: 1px solid rgba(234, 230, 218, 0.06);
+    flex-shrink: 0;
     display: flex;
     align-items: center;
-    z-index: 9999;
+    background-color: var(--bg);
+    border-top: 1px solid rgba(234, 230, 218, 0.06);
   }
   .tab-item {
     flex: 1;
