@@ -400,50 +400,37 @@
     flex-shrink: 0;
   }
   .ride-button {
-    width: 108px;
-    height: 108px;
-    border-radius: 50%;
+    /* No more disc — the button IS the icon. 96px is the tap target. */
+    width: 96px;
+    height: 96px;
     border: none;
-    background: var(--cream);
-    color: var(--bg);
-    font-family: "Helvetica Neue", -apple-system, Helvetica, sans-serif;
-    font-weight: 800;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    line-height: 1;
-    cursor: pointer;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-    transition: background-color 0.25s ease, color 0.25s ease, transform 0.1s ease;
-    /* Flex-centre the label inside the circle */
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: transparent;
     padding: 0;
-  }
-  .ride-button:active { transform: scale(0.97); }
-  .ride-button.riding {
-    background: #D89A2E;
-    color: var(--bg);
-  }
-  .ride-button-icon {
-    /* SVG container sized so the visible glyph (~58% of viewBox) lands
-       at roughly 30% of the 108px button diameter. */
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 56px;
-    height: 56px;
-    color: var(--bg);  /* matches the bike-area background — "cutout" effect */
+    transition: transform 0.1s ease;
+    -webkit-appearance: none;
+    box-shadow: none;
+  }
+  .ride-button:active { transform: scale(0.93); }
+  .ride-button-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 96px;
+    height: 96px;
+    color: #4A5240;  /* light olive — same as top banner */
+  }
+  .ride-button.riding .ride-button-icon {
+    color: #D89A2E;  /* amber — same as active-ride banner */
   }
   .ride-button-icon svg {
     width: 100%;
     height: 100%;
     fill: currentColor;
   }
-  /* Override: button text color no longer drives the icon — the icon
-     container owns its own color so cream/amber background stays clean. */
-  .ride-button { color: var(--bg); }
-  .ride-button.riding .ride-button-icon { color: var(--bg); }
   /* Keep the old .btn class so the sheet save/cancel buttons still work */
   .btn {
     height: 60px;

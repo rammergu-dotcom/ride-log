@@ -1,6 +1,6 @@
 // Ride Log — Service Worker
 // Bump CACHE_VERSION whenever index.html or any cached asset changes.
-const CACHE_VERSION = 'v15';
+const CACHE_VERSION = 'v16';
 const CACHE_NAME = `ride-log-${CACHE_VERSION}`;
 
 const PRECACHE_URLS = [
