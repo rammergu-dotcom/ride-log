@@ -426,13 +426,13 @@
     color: var(--bg);
   }
   .ride-button-icon {
-    /* SVG container sized so the visible glyph (~83% of viewBox) lands
-       at roughly 50% of the 108px button diameter. */
+    /* SVG container sized so the visible glyph (~58% of viewBox) lands
+       at roughly 30% of the 108px button diameter. */
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 64px;
-    height: 64px;
+    width: 56px;
+    height: 56px;
     color: var(--bg);  /* matches the bike-area background — "cutout" effect */
   }
   .ride-button-icon svg {
@@ -1162,7 +1162,7 @@
     <div class="ride-button-wrap">
       <button class="ride-button" id="rideToggleBtn" aria-label="Start ride">
         <span class="ride-button-icon" id="rideToggleIcon">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 2 L22 12 L2 22 Z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 4 L22 12 L8 20 Z"/></svg>
         </span>
       </button>
     </div>
@@ -1415,10 +1415,13 @@
   const rideToggleBtn = $('rideToggleBtn');
   const rideToggleIcon = $('rideToggleIcon');
   const sheetDiscard = $('sheetDiscard');
-  // SVG glyphs for the round Start/End button. viewBox 0–24, paths fill
-  // ~83% so the visible icon is roughly half the 108px circle.
-  const PLAY_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 2 L22 12 L2 22 Z"/></svg>';
-  const STOP_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="2" width="20" height="20" rx="2"/></svg>';
+  // SVG glyphs for the round Start/End button. viewBox 0–24, paths sized
+  // so the visible icon is ~30% of the 108px circle. Play triangle uses
+  // an optically-centred path (vertices give centroid at x≈12.67, which
+  // looks centred to the eye — a geometric-centre triangle reads as
+  // shifted left because of the mass on the flat side).
+  const PLAY_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 4 L22 12 L8 20 Z"/></svg>';
+  const STOP_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="1.5"/></svg>';
   const activeBanner = $('activeBanner');
   const activeTimer = $('activeTimer');
   const activeSubstrip = $('activeSubstrip');
