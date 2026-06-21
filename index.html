@@ -113,12 +113,15 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     display: none;
-    /* Tab bar is now in flex flow (no longer position: fixed) so the
-       screen doesn't need to reserve space below for it. */
   }
   .screen.active {
     display: flex;
     flex-direction: column;
+    animation: screen-fade-in 220ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  @keyframes screen-fade-in {
+    from { opacity: 0; transform: translateX(8px); }
+    to   { opacity: 1; transform: translateX(0); }
   }
 
   /* HOME TAB */
@@ -203,30 +206,31 @@
   }
   .kpi-label {
     font-family: "Helvetica Neue", -apple-system, Helvetica, sans-serif;
-    font-size: 9px;
-    font-weight: 600;
+    font-size: 10px;
+    font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: rgba(245, 242, 235, 0.4);
+    color: rgba(255, 255, 255, 0.7);
     margin-bottom: 6px;
   }
   .kpi-value {
     font-family: "Helvetica Neue", -apple-system, Helvetica, sans-serif;
     font-size: 26px;
-    font-weight: 200;
-    color: #F5F2EB;
+    font-weight: 600;
+    color: #FFFFFF;
     line-height: 1;
   }
   .kpi-unit {
     font-size: 12px;
-    font-weight: 400;
-    color: rgba(245, 242, 235, 0.4);
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.65);
     margin-left: 3px;
   }
   .kpi-sub {
     font-size: 10px;
-    color: rgba(245, 242, 235, 0.3);
-    margin-top: 2px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.55);
+    margin-top: 4px;
   }
 
   /* LOGBOOK PROGRESS */
@@ -403,21 +407,30 @@
     background: var(--cream);
     color: var(--bg);
     font-family: "Helvetica Neue", -apple-system, Helvetica, sans-serif;
-    font-size: 14px;
     font-weight: 800;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.02em;
     text-transform: uppercase;
-    line-height: 1.15;
+    line-height: 1;
     cursor: pointer;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
     transition: background-color 0.25s ease, color 0.25s ease, transform 0.1s ease;
+    /* Flex-centre the label inside the circle */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
   }
   .ride-button:active { transform: scale(0.97); }
   .ride-button.riding {
     background: #D89A2E;
     color: var(--bg);
   }
-  .ride-button-label { display: inline-block; }
+  .ride-button-label {
+    /* Per spec: ~60% of the 108px button diameter */
+    font-size: 44px;
+    line-height: 1;
+    display: inline-block;
+  }
   /* Keep the old .btn class so the sheet save/cancel buttons still work */
   .btn {
     height: 60px;
@@ -1085,12 +1098,12 @@
   <div id="homeScreen" class="screen active">
     <div class="kpi-strip">
       <div class="kpi-card">
-        <div class="kpi-label">Total Dist</div>
+        <div class="kpi-label">Distance</div>
         <div class="kpi-value"><span id="kpiDistance">0</span><span class="kpi-unit">km</span></div>
         <div class="kpi-sub" id="kpiDistanceSub">0 rides</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-label">Total Time</div>
+        <div class="kpi-label">Time</div>
         <div class="kpi-value" id="kpiTime">0h 0m</div>
         <div class="kpi-sub" id="kpiTimeSub"></div>
       </div>
@@ -1135,7 +1148,7 @@
 
     <div class="ride-button-wrap">
       <button class="ride-button" id="rideToggleBtn" aria-label="Start ride">
-        <span class="ride-button-label" id="rideToggleLabel">Start<br>Ride</span>
+        <span class="ride-button-label" id="rideToggleLabel">Go</span>
       </button>
     </div>
   </div>
@@ -1738,7 +1751,7 @@
     if (activeRide) {
       rideToggleBtn.classList.add('riding');
       rideToggleBtn.setAttribute('aria-label', 'End ride');
-      rideToggleLabel.innerHTML = 'End<br>Ride';
+      rideToggleLabel.textContent = 'End';
       activeBanner.classList.add('visible');
       activeSubstrip.classList.add('visible');
       activeSubstrip.textContent =
@@ -1748,7 +1761,7 @@
     } else {
       rideToggleBtn.classList.remove('riding');
       rideToggleBtn.setAttribute('aria-label', 'Start ride');
-      rideToggleLabel.innerHTML = 'Start<br>Ride';
+      rideToggleLabel.textContent = 'Go';
       activeBanner.classList.remove('visible');
       activeSubstrip.classList.remove('visible');
       stopActiveTicker();
