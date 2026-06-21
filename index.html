@@ -425,12 +425,25 @@
     background: #D89A2E;
     color: var(--bg);
   }
-  .ride-button-label {
-    /* Per spec: ~60% of the 108px button diameter */
-    font-size: 44px;
-    line-height: 1;
-    display: inline-block;
+  .ride-button-icon {
+    /* SVG container sized so the visible glyph (~83% of viewBox) lands
+       at roughly 50% of the 108px button diameter. */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    color: var(--bg);  /* matches the bike-area background — "cutout" effect */
   }
+  .ride-button-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+  }
+  /* Override: button text color no longer drives the icon — the icon
+     container owns its own color so cream/amber background stays clean. */
+  .ride-button { color: var(--bg); }
+  .ride-button.riding .ride-button-icon { color: var(--bg); }
   /* Keep the old .btn class so the sheet save/cancel buttons still work */
   .btn {
     height: 60px;
@@ -1148,7 +1161,9 @@
 
     <div class="ride-button-wrap">
       <button class="ride-button" id="rideToggleBtn" aria-label="Start ride">
-        <span class="ride-button-label" id="rideToggleLabel">Go</span>
+        <span class="ride-button-icon" id="rideToggleIcon">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 2 L22 12 L2 22 Z"/></svg>
+        </span>
       </button>
     </div>
   </div>
@@ -1398,8 +1413,12 @@
   // ---------- ELEMENTS ----------
   const $ = id => document.getElementById(id);
   const rideToggleBtn = $('rideToggleBtn');
-  const rideToggleLabel = $('rideToggleLabel');
+  const rideToggleIcon = $('rideToggleIcon');
   const sheetDiscard = $('sheetDiscard');
+  // SVG glyphs for the round Start/End button. viewBox 0–24, paths fill
+  // ~83% so the visible icon is roughly half the 108px circle.
+  const PLAY_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 2 L22 12 L2 22 Z"/></svg>';
+  const STOP_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="2" width="20" height="20" rx="2"/></svg>';
   const activeBanner = $('activeBanner');
   const activeTimer = $('activeTimer');
   const activeSubstrip = $('activeSubstrip');
@@ -1751,7 +1770,7 @@
     if (activeRide) {
       rideToggleBtn.classList.add('riding');
       rideToggleBtn.setAttribute('aria-label', 'End ride');
-      rideToggleLabel.textContent = 'End';
+      rideToggleIcon.innerHTML = STOP_SVG;
       activeBanner.classList.add('visible');
       activeSubstrip.classList.add('visible');
       activeSubstrip.textContent =
@@ -1761,7 +1780,7 @@
     } else {
       rideToggleBtn.classList.remove('riding');
       rideToggleBtn.setAttribute('aria-label', 'Start ride');
-      rideToggleLabel.textContent = 'Go';
+      rideToggleIcon.innerHTML = PLAY_SVG;
       activeBanner.classList.remove('visible');
       activeSubstrip.classList.remove('visible');
       stopActiveTicker();
